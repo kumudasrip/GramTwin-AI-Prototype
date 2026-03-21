@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "field_id": "F1", "crop_type": "Millets", "area_hectares": 3.2 },
+      "geometry": { "type": "Polygon", "coordinates": [[[79.435, 18.755], [79.44, 18.755], [79.44, 18.76], [79.435, 18.76], [79.435, 18.755]]] }
+    }
+  ]
+}

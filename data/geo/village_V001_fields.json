@@ -1,0 +1,15 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "field_id": "F1", "crop_type": "Paddy", "area_hectares": 2.5 },
+      "geometry": { "type": "Polygon", "coordinates": [[[76.185, 14.025], [76.19, 14.025], [76.19, 14.03], [76.185, 14.03], [76.185, 14.025]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "field_id": "F2", "crop_type": "Millets", "area_hectares": 1.8 },
+      "geometry": { "type": "Polygon", "coordinates": [[[76.192, 14.032], [76.197, 14.032], [76.197, 14.037], [76.192, 14.037], [76.192, 14.032]]] }
+    }
+  ]
+}
