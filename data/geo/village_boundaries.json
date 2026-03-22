@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "V001",
+      "properties": {
+        "village_id": "V001",
+        "village_name": "Holalkere",
+        "state": "Karnataka",
+        "district": "Chitradurga",
+        "population": 4500
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [76.18, 14.02],
+            [76.20, 14.02],
+            [76.20, 14.04],
+            [76.18, 14.04],
+            [76.18, 14.02]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "V002",
+      "properties": {
+        "village_id": "V002",
+        "village_name": "Ramagundam",
+        "state": "Telangana",
+        "district": "Karimnagar",
+        "population": 3800
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [79.43, 18.75],
+            [79.45, 18.75],
+            [79.45, 18.77],
+            [79.43, 18.77],
+            [79.43, 18.75]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "V003",
+      "properties": {
+        "village_id": "V003",
+        "village_name": "Chittoor East",
+        "state": "Andhra Pradesh",
+        "district": "Chittoor",
+        "population": 5800
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [79.09, 13.20],
+            [79.11, 13.20],
+            [79.11, 13.22],
+            [79.09, 13.22],
+            [79.09, 13.20]
+          ]
+        ]
+      }
+    }
+  ]
+}

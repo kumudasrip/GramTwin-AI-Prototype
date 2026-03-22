@@ -1,0 +1,217 @@
+import express from "express";
+import { createServer as createViteServer } from "vite";
+import path from "path";
+import { fileURLToPath } from "url";
+import { simulateVillage, getBaselineData, getLatestAlerts, getLastSimulation } from "./server/simulation.ts";
+import { loadVillageList, loadRainfallData } from "./server/data/csv_loader.ts";
+import { loadGeoJSON } from "./server/geo_loader.ts";
+import { 
+  VILLAGE_METADATA, 
+  addVillageReport, 
+  getVillageReports, 
+  getLatestReport,
+  getInfrastructureRecommendations,
+  generateInfrastructureRecommendations
+} from "./server/data/village_metadata.ts";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+async function startServer() {
+  const app = express();
+  const PORT = 3000;
+
+  app.use(express.json());
+
+  // API Routes
+  app.get("/api/village/list", (req, res) => {
+    const villages = loadVillageList();
+    res.json(villages.map(v => ({ id: v.village_id, name: v.village_name })));
+  });
+
+  app.get("/api/village/:id/baseline", (req, res) => {
+    const villages = loadVillageList();
+    const village = villages.find(v => v.village_id === req.params.id);
+    if (village) {
+      res.json({
+        population: village.population,
+        households: village.households,
+        livestock: village.livestock,
+        main_crop: village.main_crop,
+        groundwater_level: village.groundwater_level_initial > 30 ? "Stable" : "Declining",
+        groundwater_level_initial: village.groundwater_level_initial,
+        village_name: village.village_name,
+        state: village.state,
+        district: village.district
+      });
+    } else {
+      res.status(404).json({ error: "Village not found" });
+    }
+  });
+
+  app.get("/api/rainfall/:id", (req, res) => {
+    const rainfall = loadRainfallData(req.params.id);
+    res.json(rainfall);
+  });
+
+  // Map Data Endpoints
+  app.get("/api/geo/villages", (req, res) => {
+    const geo = loadGeoJSON("village_boundaries.json");
+    res.json(geo);
+  });
+
+  app.get("/api/geo/village/:id/fields", (req, res) => {
+    const geo = loadGeoJSON(`village_${req.params.id}_fields.json`);
+    if (geo) res.json(geo);
+    else res.status(404).json({ error: "Geo data not found" });
+  });
+
+  app.get("/api/geo/village/:id/wells", (req, res) => {
+    const geo = loadGeoJSON(`village_${req.params.id}_wells.json`);
+    if (geo) res.json(geo);
+    else res.status(404).json({ error: "Geo data not found" });
+  });
+
+  app.get("/api/geo/village/:id/flood_risk", (req, res) => {
+    const geo = loadGeoJSON(`village_${req.params.id}_flood_risk.json`);
+    if (geo) res.json(geo);
+    else res.status(404).json({ error: "Geo data not found" });
+  });
+
+  app.get("/api/village/baseline", (req, res) => {
+    res.json(getBaselineData());
+  });
+
+  app.post("/api/village/simulate", (req, res) => {
+    const result = simulateVillage(req.body);
+    res.json(result);
+  });
+
+  app.get("/api/village/last_simulation", (req, res) => {
+    const last = getLastSimulation();
+    if (last) {
+      res.json(last);
+    } else {
+      res.status(404).json({ error: "No simulation found" });
+    }
+  });
+
+  app.get("/api/village/alerts", (req, res) => {
+    res.json(getLatestAlerts());
+  });
+
+  // ===== New API Endpoints for Reports & Infrastructure =====
+
+  // Get village metadata with soil types and crop information
+  app.get("/api/village/:id/metadata", (req, res) => {
+    const metadata = VILLAGE_METADATA[req.params.id];
+    if (metadata) {
+      res.json(metadata);
+    } else {
+      res.status(404).json({ error: "Metadata not found" });
+    }
+  });
+
+  // Get all reports for a village
+  app.get("/api/village/:id/reports", (req, res) => {
+    const reports = getVillageReports(req.params.id);
+    res.json(reports);
+  });
+
+  // Get latest report for a village
+  app.get("/api/village/:id/reports/latest", (req, res) => {
+    const report = getLatestReport(req.params.id);
+    if (report) {
+      res.json(report);
+    } else {
+      res.status(404).json({ error: "No reports found" });
+    }
+  });
+
+  // Submit a new village report
+  app.post("/api/village/report/submit", (req, res) => {
+    const { villageId, submittedBy, submitterType, waterStatus, waterDetails, climateStatus, climateDetails, currentChallenges, notes } = req.body;
+    
+    if (!villageId || !submittedBy) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const report = {
+      id: `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      villageId,
+      reportDate: new Date().toISOString(),
+      submittedBy,
+      submitterType: submitterType || 'Panchayat',
+      waterStatus: waterStatus || 'Good',
+      waterDetails: waterDetails || '',
+      climateStatus: climateStatus || 'Good',
+      climateDetails: climateDetails || '',
+      currentChallenges: currentChallenges || [],
+      notes: notes || ''
+    };
+
+    const added = addVillageReport(report);
+    res.json(added);
+  });
+
+  // Get infrastructure recommendations for a village
+  app.get("/api/village/:id/infrastructure/recommendations", (req, res) => {
+    const recommendations = getInfrastructureRecommendations(req.params.id);
+    if (recommendations.length === 0) {
+      // Generate recommendations if none exist
+      const generated = generateInfrastructureRecommendations(req.params.id);
+      res.json(generated);
+    } else {
+      res.json(recommendations);
+    }
+  });
+
+  // Analyze dumpyard photo and generate recommendations 
+  app.post("/api/village/infrastructure/analyze-photo", (req, res) => {
+    const { villageId } = req.body;
+    
+    if (!villageId) {
+      return res.status(400).json({ error: "Village ID required" });
+    }
+
+    // Mock photo analysis - in production, use computer vision API
+    const recommendations = generateInfrastructureRecommendations(villageId);
+    res.json(recommendations);
+  });
+
+  // Search villages by name
+  app.get("/api/village/search", (req, res) => {
+    const query = (req.query.q as string || '').toLowerCase();
+    const villages = loadVillageList();
+    
+    const results = villages
+      .filter(v => 
+        v.village_name.toLowerCase().includes(query) || 
+        v.village_id.toLowerCase().includes(query)
+      )
+      .map(v => ({ id: v.village_id, name: v.village_name }));
+    
+    res.json(results);
+  });
+
+  // Vite middleware for development
+  if (process.env.NODE_ENV !== "production") {
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "spa",
+    });
+    app.use(vite.middlewares);
+  } else {
+    const distPath = path.join(process.cwd(), "dist");
+    app.use(express.static(distPath));
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
+  });
+}
+
+startServer();

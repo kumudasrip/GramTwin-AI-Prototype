@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "well_id": "W1", "groundwater_level": 15.0, "status": "Dry" },
+      "geometry": { "type": "Point", "coordinates": [79.098, 13.208] }
+    }
+  ]
+}

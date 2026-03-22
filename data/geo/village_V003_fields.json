@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "field_id": "F1", "crop_type": "Pulses", "area_hectares": 4.5 },
+      "geometry": { "type": "Polygon", "coordinates": [[[79.095, 13.205], [79.10, 13.205], [79.10, 13.21], [79.095, 13.21], [79.095, 13.205]]] }
+    }
+  ]
+}

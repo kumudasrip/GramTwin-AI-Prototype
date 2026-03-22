@@ -1,0 +1,19 @@
+{
+  "population": 4500,
+  "households": 1000,
+  "livestock": 800,
+  "main_crop": "Paddy",
+  "groundwater_level_initial": 25.0,
+  "months_to_simulate": 3,
+  "domestic_water_per_capita_per_month": 0.005,
+  "irrigation_water_by_crop": {
+    "Paddy": 15.0,
+    "Millets": 5.0,
+    "Pulses": 8.0
+  },
+  "recharge_by_rainfall": {
+    "Below normal": 5.0,
+    "Normal": 15.0,
+    "Above normal": 25.0
+  }
+}
