@@ -49,6 +49,16 @@ const Dashboard: React.FC<DashboardProps> = ({
     }
   }, [rainfallInfo]);
 
+  const getGroundwaterStatus = (pop: number) => {
+    if (pop < 100) return { label: "Excellent", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200" };
+    if (pop <= 1000) return { label: "Good", color: "text-green-600", bg: "bg-green-50", border: "border-green-200" };
+    if (pop <= 5000) return { label: "Moderate", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" };
+    if (pop <= 10000) return { label: "Stressed", color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-200" };
+    return { label: "Critical", color: "text-red-600", bg: "bg-red-50", border: "border-red-200" };
+  };
+
+  const gwStatus = getGroundwaterStatus(formData.population);
+
   if (!baseline) return <div className="p-8 text-center">Loading village profile...</div>;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -57,27 +67,27 @@ const Dashboard: React.FC<DashboardProps> = ({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-12">
       {/* Village Selection & About */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-black/5">
-            <div className="flex items-center justify-between mb-4">
+          <div className="dashboard-card">
+            <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-indigo-600" />
-                <h2 className="text-lg font-semibold">Select Village</h2>
+                <MapPin className="w-6 h-6 text-earth-primary" />
+                <h2 className="text-2xl font-bold text-earth-primary">Select Village</h2>
               </div>
               {baseline.village_name && (
                 <div className="text-right">
-                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Data Source</p>
-                  <p className="text-[10px] text-zinc-500">Census-style & IMD-style CSV</p>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Data Source</p>
+                  <p className="text-xs text-zinc-500">Census & IMD Historical Data</p>
                 </div>
               )}
             </div>
             <select
               value={selectedVillageId}
               onChange={(e) => onVillageSelect(e.target.value)}
-              className="w-full p-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+              className="select-input"
             >
               {villages.map(v => (
                 <option key={v.id} value={v.id}>{v.name}</option>
@@ -85,15 +95,15 @@ const Dashboard: React.FC<DashboardProps> = ({
             </select>
             
             {baseline.district && (
-              <div className="mt-4 flex gap-4 text-xs text-zinc-500 font-medium">
-                <span className="px-2 py-1 bg-zinc-100 rounded-md">District: {baseline.district}</span>
-                <span className="px-2 py-1 bg-zinc-100 rounded-md">State: {baseline.state}</span>
+              <div className="mt-6 flex gap-4 text-xs text-zinc-500 font-semibold uppercase tracking-wider">
+                <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">District: {baseline.district}</span>
+                <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">State: {baseline.state}</span>
               </div>
             )}
           </div>
 
           {/* Map Preview */}
-          <div className="h-64">
+          <div className="map-dashboard">
             <MapComponent 
               selectedVillageId={selectedVillageId} 
               onVillageSelect={onVillageSelect} 
@@ -103,99 +113,113 @@ const Dashboard: React.FC<DashboardProps> = ({
 
           {/* Village Profile Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-black/5 flex items-center gap-4">
-              <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
-                <Users className="w-6 h-6" />
+            <div className="dashboard-card !mb-0 flex items-center gap-5">
+              <div className="w-14 h-14 bg-earth-primary/10 rounded-2xl flex items-center justify-center text-earth-primary border border-earth-primary/10">
+                <Users className="w-7 h-7" />
               </div>
               <div>
-                <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Population</p>
-                <p className="text-2xl font-semibold">{baseline.population}</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Population</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-3xl font-bold text-earth-primary">{formData.population.toLocaleString()}</p>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${formData.population > 5000 ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                    Live
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-black/5 flex items-center gap-4">
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
-                <Sprout className="w-6 h-6" />
+            <div className="dashboard-card !mb-0 flex items-center gap-5">
+              <div className="w-14 h-14 bg-earth-secondary/10 rounded-2xl flex items-center justify-center text-earth-secondary border border-earth-secondary/10">
+                <Sprout className="w-7 h-7" />
               </div>
               <div>
-                <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Main Crop</p>
-                <p className="text-2xl font-semibold">{baseline.main_crop}</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Main Crop</p>
+                <p className="text-3xl font-bold text-earth-primary">{formData.current_crop}</p>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-black/5 flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
-                <Droplets className="w-6 h-6" />
+            <div className="dashboard-card !mb-0 flex items-center gap-5">
+              <div className={`w-14 h-14 ${gwStatus.bg} rounded-2xl flex items-center justify-center ${gwStatus.color} border ${gwStatus.border}`}>
+                <Droplets className="w-7 h-7" />
               </div>
               <div>
-                <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Groundwater</p>
-                <p className="text-2xl font-semibold">{baseline.groundwater_level}</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Groundwater</p>
+                <div className="flex items-center gap-1">
+                  <p className={`text-2xl font-bold ${gwStatus.color}`}>{gwStatus.label}</p>
+                  <span className={gwStatus.color}>✓</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* About Section */}
-        <div className="bg-indigo-600 text-white p-8 rounded-2xl shadow-lg flex flex-col justify-center">
-          <h2 className="text-2xl font-bold mb-4">About GramTwin AI</h2>
-          <p className="text-indigo-100 leading-relaxed">
-            A village-scale digital twin prototype for rural India. 
-            It simulates water, crop, and risk impacts using historical rainfall patterns and census data to help communities build climate resilience.
-          </p>
+        <div className="flex flex-col gap-6">
+          <div className="dashboard-card bg-white border-earth-primary/10 shadow-xl flex flex-col justify-center min-h-[280px] relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-earth-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+            <div className="relative z-10">
+              <h2 className="text-3xl font-extrabold mb-6 leading-tight text-earth-primary">GramTwin AI <br/><span className="text-earth-gold">Intelligence</span></h2>
+              <p className="text-zinc-600 leading-relaxed text-lg">
+                Village-scale digital twin for rural India. Simulates water, crops, waste, and climate risks using Census + IMD data to help Gram Panchayats make proactive decisions.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Simulation Form */}
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-black/5">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold">Simulation Scenarios</h3>
+      <div className="dashboard-card">
+        <div className="flex justify-between items-center mb-8">
+          <h3 className="card-title !mb-0 !border-none">Simulation Scenarios</h3>
           {rainfallInfo && (
             <div className="text-right">
-              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Historical Rainfall (Last 12m)</p>
-              <p className="text-sm font-semibold text-indigo-600">{rainfallInfo.avg_rainfall_mm} mm → {rainfallInfo.rainfall_category}</p>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Historical Rainfall (Last 12 months)</p>
+              <p className="text-lg font-bold text-earth-gold">{rainfallInfo.avg_rainfall_mm} mm → {rainfallInfo.rainfall_category}</p>
             </div>
           )}
         </div>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Rainfall Forecast</label>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+          <div className="space-y-3">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Rainfall Forecast</label>
             <select
               value={formData.rainfall_forecast}
               onChange={(e) => setFormData({ ...formData, rainfall_forecast: e.target.value })}
-              className="w-full p-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="select-input !py-4"
             >
               <option value="Below normal">Below normal</option>
               <option value="Normal">Normal</option>
               <option value="Above normal">Above normal</option>
             </select>
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Population</label>
+          <div className="space-y-3">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Population</label>
             <input
               type="number"
               value={formData.population}
               onChange={(e) => setFormData({ ...formData, population: parseInt(e.target.value) || 0 })}
-              className="w-full p-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="select-input !py-4"
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Main Crop</label>
+          <div className="space-y-3">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Main Crop</label>
             <select
               value={formData.current_crop}
               onChange={(e) => setFormData({ ...formData, current_crop: e.target.value })}
-              className="w-full p-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="select-input !py-4"
             >
               <option value="Paddy">Paddy</option>
               <option value="Millets">Millets</option>
               <option value="Pulses">Pulses</option>
             </select>
           </div>
-          <div className="md:col-span-3 flex justify-center mt-4">
+          <div className="md:col-span-3 flex justify-center mt-8">
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex items-center gap-2 px-12 py-4 bg-black text-white rounded-full font-medium transition-all hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="primary-btn max-w-md"
             >
-              <Play className={`w-4 h-4 ${loading ? 'animate-pulse' : ''}`} />
-              {loading ? 'Simulating...' : 'Run Simulation'}
+              <div className="flex items-center justify-center gap-3">
+                <Play className={`w-6 h-6 ${loading ? 'animate-pulse' : ''}`} />
+                {loading ? 'Processing Simulation...' : 'Execute Simulation'}
+              </div>
             </button>
           </div>
         </form>
@@ -205,27 +229,26 @@ const Dashboard: React.FC<DashboardProps> = ({
       {simulation && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Water Risk Timeline */}
-          <div className="bg-white rounded-2xl shadow-sm border border-black/5 overflow-hidden">
-            <div className="p-6 border-b border-black/5 flex justify-between items-center">
-              <h3 className="font-semibold text-lg">Water Risk Timeline</h3>
-              <span className="text-xs text-zinc-400">3 Month Projection</span>
+          <div className="dashboard-card !p-0 overflow-hidden">
+            <div className="px-8 pt-8">
+              <h3 className="card-title">Water Risk Timeline</h3>
             </div>
-            <div className="p-6 space-y-6">
-              <table className="w-full text-left border-collapse">
+            <div className="px-8 pb-8">
+              <table className="data-table">
                 <thead>
-                  <tr className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                    <th className="pb-3">Month</th>
-                    <th className="pb-3">Water Stock</th>
-                    <th className="pb-3 text-right">Risk Level</th>
+                  <tr>
+                    <th>Month</th>
+                    <th>Water Stock</th>
+                    <th className="text-right">Risk Level</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-black/5">
+                <tbody>
                   {simulation.timeline.map((item, idx) => (
                     <tr key={idx}>
-                      <td className="py-4 font-medium">{item.month}</td>
-                      <td className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 h-2 bg-zinc-100 rounded-full overflow-hidden">
+                      <td className="font-bold text-lg">{item.month}</td>
+                      <td>
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1 h-3 bg-zinc-100 rounded-full overflow-hidden border border-zinc-200">
                             <div 
                               className={`h-full rounded-full transition-all duration-1000 ${
                                 item.water_stock >= 70 ? 'bg-emerald-500' :
@@ -234,14 +257,14 @@ const Dashboard: React.FC<DashboardProps> = ({
                               style={{ width: `${item.water_stock}%` }}
                             />
                           </div>
-                          <span className="text-xs font-mono w-8">{item.water_stock}%</span>
+                          <span className="text-sm font-mono font-bold w-10">{item.water_stock}%</span>
                         </div>
                       </td>
-                      <td className="py-4 text-right">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          item.risk === 'Low' ? 'bg-emerald-100 text-emerald-800' :
-                          item.risk === 'Medium' ? 'bg-amber-100 text-amber-800' :
-                          'bg-red-100 text-red-800'
+                      <td className="text-right">
+                        <span className={`status-badge ${
+                          item.risk === 'Low' ? 'status-low' :
+                          item.risk === 'Medium' ? 'status-medium' :
+                          'status-high'
                         }`}>
                           {item.risk}
                         </span>
@@ -254,36 +277,38 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           {/* Crop Recommendations */}
-          <div className="bg-white rounded-2xl shadow-sm border border-black/5 overflow-hidden">
-            <div className="p-6 border-b border-black/5">
-              <h3 className="font-semibold text-lg">Crop Recommendations</h3>
+          <div className="dashboard-card !p-0 overflow-hidden">
+            <div className="px-8 pt-8">
+              <h3 className="card-title">Crop Recommendations</h3>
             </div>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-zinc-50 text-xs font-medium text-zinc-500 uppercase tracking-wider">
-                  <th className="px-6 py-3">Crop</th>
-                  <th className="px-6 py-3">Suitability</th>
-                  <th className="px-6 py-3">Reason</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5">
-                {simulation.crop_recommendations.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-zinc-50 transition-colors">
-                    <td className="px-6 py-4 font-medium">{item.crop}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        item.suitability === 'High' ? 'bg-emerald-100 text-emerald-800' :
-                        item.suitability === 'Medium' ? 'bg-amber-100 text-amber-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {item.suitability}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-zinc-600">{item.reason}</td>
+            <div className="px-8 pb-8">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Crop</th>
+                    <th>Suitability</th>
+                    <th>Reason</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {simulation.crop_recommendations.map((item, idx) => (
+                    <tr key={idx}>
+                      <td className="font-bold text-lg">{item.crop}</td>
+                      <td>
+                        <span className={`status-badge ${
+                          item.suitability === 'High' ? 'status-low' :
+                          item.suitability === 'Medium' ? 'status-medium' :
+                          'status-high'
+                        }`}>
+                          {item.suitability}
+                        </span>
+                      </td>
+                      <td className="text-sm text-zinc-500 leading-relaxed">{item.reason}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

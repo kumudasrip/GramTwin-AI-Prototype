@@ -68,14 +68,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
 
   const villageStyle = (feature: any) => {
     const isSelected = feature.properties.village_id === selectedVillageId;
-    let color = "#6366f1"; // indigo-500
+    let color = "#1e3a8a"; // earth-primary
     let weight = 2;
     
     if (isSelected) {
       weight = 4;
-      if (simulationRisk === "High") color = "#ef4444"; // red-500
-      else if (simulationRisk === "Medium") color = "#f59e0b"; // amber-500
-      else color = "#10b981"; // emerald-500
+      if (simulationRisk === "High") color = "#dc2626"; // earth-accent
+      else if (simulationRisk === "Medium") color = "#d97706"; // earth-gold
+      else color = "#047857"; // earth-secondary
     }
 
     return {
@@ -89,9 +89,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
 
   const fieldStyle = (feature: any) => {
     const crop = feature.properties.crop_type;
-    let color = "#10b981"; // emerald-500
-    if (crop === "Paddy") color = "#3b82f6"; // blue-500
-    else if (crop === "Millets") color = "#f59e0b"; // amber-500
+    let color = "#047857"; // earth-secondary
+    if (crop === "Paddy") color = "#1e3a8a"; // earth-primary
+    else if (crop === "Millets") color = "#d97706"; // earth-gold
     
     return {
       fillColor: color,
@@ -104,9 +104,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
 
   const floodRiskStyle = (feature: any) => {
     const risk = feature.properties.risk_level;
-    let color = "#ef4444"; // red-500
-    if (risk === "Medium") color = "#f59e0b"; // amber-500
-    else if (risk === "Low") color = "#10b981"; // emerald-500
+    let color = "#dc2626"; // earth-accent
+    if (risk === "Medium") color = "#d97706"; // earth-gold
+    else if (risk === "Low") color = "#047857"; // earth-secondary
     
     return {
       fillColor: color,
@@ -116,7 +116,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
   };
 
   return (
-    <div className="h-[500px] w-full rounded-2xl overflow-hidden border border-black/5 shadow-sm relative z-0">
+    <div className="h-full w-full relative z-0">
       <MapContainer center={mapCenter} zoom={14} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -147,14 +147,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
             center={[well.geometry.coordinates[1], well.geometry.coordinates[0]]}
             radius={6}
             pathOptions={{
-              fillColor: well.properties.status === "Good" ? "#10b981" : "#ef4444",
+              fillColor: well.properties.status === "Good" ? "#047857" : "#dc2626",
               color: 'white',
               weight: 2,
               fillOpacity: 0.8
             }}
           >
             <Popup>
-              <div className="text-xs">
+              <div className="text-xs text-zinc-900">
                 <p className="font-bold">Well: {well.properties.well_id}</p>
                 <p>Level: {well.properties.groundwater_level}m</p>
                 <p>Status: {well.properties.status}</p>
@@ -164,30 +164,34 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
         ))}
       </MapContainer>
       
-      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg z-[1000] border border-black/5 text-[10px] font-medium space-y-2">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-indigo-500 opacity-30 border border-indigo-500" />
-          <span>Village Boundary</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-blue-500 opacity-60" />
-          <span>Paddy Fields</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-amber-500 opacity-60" />
-          <span>Millet Fields</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-red-500 opacity-40" />
-          <span>Flood Risk Zone</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-500 border border-white" />
-          <span>Healthy Well</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500 border border-white" />
-          <span>Stressed/Dry Well</span>
+      {/* Legend */}
+      <div className="legend-panel">
+        <h4 className="legend-title">Map Legend</h4>
+        <div className="space-y-3">
+          <div className="legend-item">
+            <div className="w-5 h-5 rounded-full bg-[#1e3a8a]/30 border border-[#1e3a8a] shadow-sm" />
+            <span className="font-medium">Village Boundary</span>
+          </div>
+          <div className="legend-item">
+            <div className="w-5 h-5 rounded bg-[#1e3a8a]/60 border border-white shadow-sm" />
+            <span className="font-medium">Paddy Fields</span>
+          </div>
+          <div className="legend-item">
+            <div className="w-5 h-5 rounded bg-[#d97706]/60 border border-white shadow-sm" />
+            <span className="font-medium">Millet Fields</span>
+          </div>
+          <div className="legend-item">
+            <div className="w-5 h-5 rounded bg-[#dc2626]/40 border border-white shadow-sm" />
+            <span className="font-medium">Flood Risk Zone</span>
+          </div>
+          <div className="legend-item">
+            <div className="w-5 h-5 rounded-full bg-[#047857] border-2 border-white shadow-sm" />
+            <span className="font-medium">Healthy Well</span>
+          </div>
+          <div className="legend-item">
+            <div className="w-5 h-5 rounded-full bg-[#dc2626] border-2 border-white shadow-sm" />
+            <span className="font-medium">Stressed Well</span>
+          </div>
         </div>
       </div>
     </div>
