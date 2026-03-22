@@ -194,6 +194,168 @@ async function startServer() {
     res.json(results);
   });
 
+  // Get soil data for a village
+  app.get("/api/village/:id/soil-data", (req, res) => {
+    const villageId = req.params.id;
+    
+    // Mock soil data - in production, fetch from database
+    const soilDataMap: { [key: string]: any[] } = {
+      'V001': [
+        {
+          region: 'North Zone',
+          soilType: 'Black Soil',
+          coordinates: [14.04, 76.18],
+          crops: ['Cotton', 'Sugarcane', 'Jowar'],
+          pH: 7.2,
+          fertility: 'High',
+          waterRetention: 'High',
+          organicMatter: 3.5,
+          nitrogen: 245,
+          phosphorus: 18,
+          potassium: 182
+        },
+        {
+          region: 'East Zone',
+          soilType: 'Red Soil',
+          coordinates: [14.03, 76.20],
+          crops: ['Groundnuts', 'Pulses', 'Millets'],
+          pH: 6.5,
+          fertility: 'Medium',
+          waterRetention: 'Medium',
+          organicMatter: 2.1,
+          nitrogen: 180,
+          phosphorus: 12,
+          potassium: 145
+        },
+        {
+          region: 'South Zone',
+          soilType: 'Alluvial Soil',
+          coordinates: [14.02, 76.19],
+          crops: ['Rice', 'Wheat', 'Sugarcane'],
+          pH: 6.8,
+          fertility: 'High',
+          waterRetention: 'High',
+          organicMatter: 4.2,
+          nitrogen: 320,
+          phosphorus: 22,
+          potassium: 210
+        },
+        {
+          region: 'West Zone',
+          soilType: 'Sandy Soil',
+          coordinates: [14.03, 76.17],
+          crops: ['Groundnuts', 'Millets', 'Castor'],
+          pH: 7.0,
+          fertility: 'Low',
+          waterRetention: 'Low',
+          organicMatter: 1.2,
+          nitrogen: 95,
+          phosphorus: 8,
+          potassium: 78
+        }
+      ],
+      'V002': [
+        {
+          region: 'North Zone',
+          soilType: 'Laterite Soil',
+          coordinates: [14.05, 76.21],
+          crops: ['Coconut', 'Cashew', 'Arecanut'],
+          pH: 5.5,
+          fertility: 'Medium',
+          waterRetention: 'High',
+          organicMatter: 2.8,
+          nitrogen: 210,
+          phosphorus: 14,
+          potassium: 165
+        },
+        {
+          region: 'Central Zone',
+          soilType: 'Clayey Soil',
+          coordinates: [14.04, 76.22],
+          crops: ['Rice', 'Cotton', 'Sugarcane'],
+          pH: 6.2,
+          fertility: 'Medium',
+          waterRetention: 'High',
+          organicMatter: 3.1,
+          nitrogen: 265,
+          phosphorus: 19,
+          potassium: 195
+        }
+      ],
+      'V003': [
+        {
+          region: 'North Zone',
+          soilType: 'Red Soil',
+          coordinates: [14.06, 76.23],
+          crops: ['Jowar', 'Pulses', 'Groundnuts'],
+          pH: 6.4,
+          fertility: 'Medium',
+          waterRetention: 'Medium',
+          organicMatter: 2.3,
+          nitrogen: 195,
+          phosphorus: 13,
+          potassium: 155
+        },
+        {
+          region: 'South Zone',
+          soilType: 'Sandy Soil',
+          coordinates: [14.05, 76.24],
+          crops: ['Millets', 'Castor', 'Groundnuts'],
+          pH: 7.1,
+          fertility: 'Low',
+          waterRetention: 'Low',
+          organicMatter: 1.1,
+          nitrogen: 88,
+          phosphorus: 7,
+          potassium: 72
+        }
+      ]
+    };
+
+    const soilData = soilDataMap[villageId] || soilDataMap['V001'];
+    res.json({
+      villageId,
+      soilZones: soilData,
+      totalZones: soilData.length,
+      averageFertility: soilData.reduce((sum, s) => {
+        const fertilityValue = s.fertility === 'High' ? 3 : s.fertility === 'Medium' ? 2 : 1;
+        return sum + fertilityValue;
+      }, 0) / soilData.length,
+      lastUpdated: new Date().toISOString()
+    });
+  });
+
+  // Get terrain analysis for a village
+  app.get("/api/village/:id/terrain-analysis", (req, res) => {
+    const villageId = req.params.id;
+    
+    const terrainAnalysis = {
+      villageId,
+      elevation: 650,
+      slope: 'Gentle (2-5%)',
+      drainageClass: 'Well Drained',
+      vegetationType: 'Agricultural',
+      landUseClasses: [
+        { class: 'Agricultural Land', percentage: 65, area: 520 },
+        { class: 'Settlement', percentage: 15, area: 120 },
+        { class: 'Forest', percentage: 12, area: 96 },
+        { class: 'Rangeland', percentage: 8, area: 64 }
+      ],
+      erosionRisk: {
+        high: { percentage: 5, area: 40 },
+        medium: { percentage: 15, area: 120 },
+        low: { percentage: 80, area: 640 }
+      },
+      waterAvailability: {
+        groundwater: 'Moderate (35-40m)',
+        surfaceWater: 'Yes - Seasonal streams',
+        rainwater: 'Good potential for harvesting'
+      }
+    };
+
+    res.json(terrainAnalysis);
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

@@ -9,7 +9,8 @@ import {
   ChevronRight,
   Search,
   FileText,
-  Settings
+  Settings,
+  Mountain
 } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import Alerts from './components/Alerts';
@@ -18,6 +19,7 @@ import VillageSearch from './components/VillageSearch';
 import ReportPage from './components/ReportPage';
 import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
+import TerrainMap from './components/TerrainMap';
 import { 
   fetchBaseline, 
   fetchVillageList, 
@@ -34,7 +36,7 @@ export default function App() {
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'alerts' | 'village-map' | 'reports' | 'infrastructure'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'alerts' | 'village-map' | 'reports' | 'infrastructure' | 'terrain'>('map');
   const [villages, setVillages] = useState<VillageListItem[]>([]);
   const [selectedVillageId, setSelectedVillageId] = useState<string>('V001');
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
@@ -136,6 +138,17 @@ export default function App() {
           >
             <Sprout className="w-4 h-4" />
             Soil &Crops
+          </button>
+          <button 
+            onClick={() => setActiveTab('terrain')}
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              activeTab === 'terrain' 
+                ? 'bg-earth-primary text-white shadow-lg' 
+                : 'text-zinc-500 hover:bg-zinc-100'
+            }`}
+          >
+            <Mountain className="w-4 h-4" />
+            Terrain
           </button>
           <button 
             onClick={() => setActiveTab('dashboard')}
@@ -269,6 +282,10 @@ export default function App() {
                   onVillageSelect={handleVillageSelect}
                 />
               </div>
+            )}
+
+            {activeTab === 'terrain' && (
+              <TerrainMap selectedVillageId={selectedVillageId} />
             )}
 
             {activeTab === 'dashboard' && (

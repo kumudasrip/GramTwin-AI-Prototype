@@ -200,3 +200,60 @@ export const searchVillages = async (query: string): Promise<VillageListItem[]> 
   const res = await fetch(`/api/village/search?q=${encodeURIComponent(query)}`);
   return res.json();
 };
+
+// Get soil data for a village
+export interface SoilData {
+  region: string;
+  soilType: string;
+  coordinates: [number, number];
+  crops: string[];
+  pH: number;
+  fertility: 'Low' | 'Medium' | 'High';
+  waterRetention: 'Low' | 'Medium' | 'High';
+  organicMatter?: number;
+  nitrogen?: number;
+  phosphorus?: number;
+  potassium?: number;
+}
+
+export interface SoilDataResponse {
+  villageId: string;
+  soilZones: SoilData[];
+  totalZones: number;
+  averageFertility: number;
+  lastUpdated: string;
+}
+
+export const fetchSoilData = async (villageId: string): Promise<SoilDataResponse> => {
+  const res = await fetch(`/api/village/${villageId}/soil-data`);
+  return res.json();
+};
+
+// Get terrain analysis for a village
+export interface TerrainAnalysis {
+  villageId: string;
+  elevation: number;
+  slope: string;
+  drainageClass: string;
+  vegetationType: string;
+  landUseClasses: {
+    class: string;
+    percentage: number;
+    area: number;
+  }[];
+  erosionRisk: {
+    high: { percentage: number; area: number };
+    medium: { percentage: number; area: number };
+    low: { percentage: number; area: number };
+  };
+  waterAvailability: {
+    groundwater: string;
+    surfaceWater: string;
+    rainwater: string;
+  };
+}
+
+export const fetchTerrainAnalysis = async (villageId: string): Promise<TerrainAnalysis> => {
+  const res = await fetch(`/api/village/${villageId}/terrain-analysis`);
+  return res.json();
+};
