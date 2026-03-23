@@ -131,6 +131,8 @@ export function getLastSimulation(): SimulationResult | null {
 
 export function getLatestAlerts(): string[] {
   return lastSimulation ? lastSimulation.alerts : [
-    "No active alerts. Run simulation to generate insights."
+    "Welcome to GramTwin AI - Your Agricultural Digital Twin",
+    "Run a simulation from the Dashboard to analyze water security for your village",
+    "Monitor groundwater levels and plan irrigation schedules based on seasonal rainfall forecasts"
   ];
 }

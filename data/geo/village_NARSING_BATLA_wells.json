@@ -1,0 +1,85 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "well_id": "NB_Well_001",
+        "name": "Community Well - North",
+        "type": "Open Well",
+        "depth_m": 12.5,
+        "yield_lpm": 850,
+        "water_level_status": "Semi-Critical",
+        "last_maintenance": "2024-01"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [79.170, 17.053]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "well_id": "NB_Well_002",
+        "name": "Bore Well - East Field",
+        "type": "Bore Well",
+        "depth_m": 14.0,
+        "yield_lpm": 650,
+        "water_level_status": "Semi-Critical",
+        "last_maintenance": "2023-12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [79.173, 17.048]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "well_id": "NB_Well_003",
+        "name": "Farmers Cooperative Bore",
+        "type": "Bore Well",
+        "depth_m": 13.2,
+        "yield_lpm": 720,
+        "water_level_status": "Semi-Critical",
+        "last_maintenance": "2023-11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [79.168, 17.042]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "well_id": "NB_Well_004",
+        "name": "Domestic Well - Village Center",
+        "type": "Open Well",
+        "depth_m": 11.8,
+        "yield_lpm": 500,
+        "water_level_status": "Semi-Critical",
+        "last_maintenance": "2024-01"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [79.170, 17.045]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "well_id": "NB_Well_005",
+        "name": "Proposed New Bore Well",
+        "type": "Planned",
+        "depth_m": 15.0,
+        "yield_lpm": 800,
+        "water_level_status": "Recommended",
+        "last_maintenance": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [79.165, 17.038]
+      }
+    }
+  ]
+}

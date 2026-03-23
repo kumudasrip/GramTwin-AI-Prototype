@@ -1,0 +1,57 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Low Risk Zone",
+        "risk_level": "Low",
+        "color": "#4ade80",
+        "description": "Highland areas, elevated terrain"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.172, 17.055], [79.176, 17.055], [79.176, 17.052], [79.172, 17.052], [79.172, 17.055]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Moderate Risk Zone",
+        "risk_level": "Moderate",
+        "color": "#facc15",
+        "description": "Mid-level terrain, adjacent to water channels"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.168, 17.050], [79.172, 17.050], [79.172, 17.043], [79.168, 17.043], [79.168, 17.050]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "High Risk Zone",
+        "risk_level": "High",
+        "color": "#ef4444",
+        "description": "Low-lying areas near drainage channels"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.164, 17.040], [79.168, 17.040], [79.168, 17.035], [79.164, 17.035], [79.164, 17.040]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hazard Mitigation: Proposed Check Dam",
+        "type": "Mitigation Structure",
+        "color": "#06b6d4",
+        "description": "Planned check dam to reduce flooding"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[79.166, 17.037], [79.168, 17.038]]
+      }
+    }
+  ]
+}

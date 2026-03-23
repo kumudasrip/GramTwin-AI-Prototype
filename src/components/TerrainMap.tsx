@@ -8,6 +8,8 @@ import { MapPin, Layers, AlertCircle } from 'lucide-react';
 const SOIL_TYPES = {
   'Black Soil': { color: '#2C2C2C', rgb: 'rgb(44, 44, 44)', description: 'High fertility, good for cotton, sugarcane' },
   'Red Soil': { color: '#CD5C5C', rgb: 'rgb(205, 92, 92)', description: 'Moderate fertility, good for groundnuts, pulses' },
+  'Red Loam': { color: '#D2691E', rgb: 'rgb(210, 105, 30)', description: 'Well-draining, moderate fertility for cotton and millets' },
+  'Mixed Alluvial-Loam': { color: '#CD8500', rgb: 'rgb(205, 133, 0)', description: 'High fertility, excellent for rice and pulses' },
   'Laterite Soil': { color: '#CD853F', rgb: 'rgb(205, 133, 63)', description: 'Good for coconut, cashew' },
   'Alluvial Soil': { color: '#F4A460', rgb: 'rgb(244, 164, 96)', description: 'Highly fertile, good for rice, wheat' },
   'Clayey Soil': { color: '#8B7355', rgb: 'rgb(139, 115, 85)', description: 'Good water retention, crops need drainage' },
@@ -120,6 +122,44 @@ const TerrainMap: React.FC<TerrainMapProps> = ({ selectedVillageId }) => {
   // Generate mock soil data for the village
   const generateSoilData = (villageId: string): SoilData[] => {
     const soilDataMap: { [key: string]: SoilData[] } = {
+      'NARSING_BATLA': [
+        {
+          region: 'North Zone',
+          soilType: 'Black Soil',
+          coordinates: [17.053, 79.170],
+          crops: ['Paddy', 'Cotton', 'Sugarcane'],
+          pH: 7.2,
+          fertility: 'High',
+          waterRetention: 'High'
+        },
+        {
+          region: 'East Zone',
+          soilType: 'Red Soil',
+          coordinates: [17.048, 79.173],
+          crops: ['Cotton', 'Millets', 'Groundnuts'],
+          pH: 6.5,
+          fertility: 'Medium',
+          waterRetention: 'Medium'
+        },
+        {
+          region: 'Central Zone',
+          soilType: 'Alluvial Soil',
+          coordinates: [17.045, 79.168],
+          crops: ['Paddy', 'Pulses', 'Vegetables'],
+          pH: 6.8,
+          fertility: 'High',
+          waterRetention: 'High'
+        },
+        {
+          region: 'South Zone',
+          soilType: 'Red Soil',
+          coordinates: [17.038, 79.165],
+          crops: ['Millets', 'Pulses', 'Groundnuts'],
+          pH: 6.4,
+          fertility: 'Medium',
+          waterRetention: 'Medium'
+        }
+      ],
       'V001': [
         {
           region: 'North Zone',
@@ -217,6 +257,7 @@ const TerrainMap: React.FC<TerrainMapProps> = ({ selectedVillageId }) => {
 
     // Update map center based on village
     const centerMap: { [key: string]: [number, number] } = {
+      'NARSING_BATLA': [17.049, 79.170],
       'V001': [14.03, 76.19],
       'V002': [14.04, 76.22],
       'V003': [14.05, 76.23]

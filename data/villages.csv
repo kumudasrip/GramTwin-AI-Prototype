@@ -1,4 +1,2 @@
 village_id,village_name,state,district,population,households,livestock,main_crop,groundwater_level_initial
-V001,Holalkere,Karnataka,Chitradurga,4500,1000,800,Paddy,25.0
-V002,Ramagundam,Telangana,Karimnagar,3800,900,600,Millets,30.0
-V003,Chittoor East,Andhra Pradesh,Chittoor,5800,1300,600,Pulses,15.0
+NARSING_BATLA,Narsing Batla,Andhra Pradesh,Nizamabad,4236,1070,245,Paddy,12.5

@@ -4,22 +4,18 @@ import {
   Sprout, 
   Droplets, 
   LayoutDashboard, 
-  Bell, 
   Map as MapIcon,
   ChevronRight,
   Search,
   FileText,
-  Settings,
-  Mountain
+  Settings
 } from 'lucide-react';
 import Dashboard from './components/Dashboard';
-import Alerts from './components/Alerts';
 import MapComponent from './components/MapComponent';
 import VillageSearch from './components/VillageSearch';
 import ReportPage from './components/ReportPage';
 import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
-import TerrainMap from './components/TerrainMap';
 import { 
   fetchBaseline, 
   fetchVillageList, 
@@ -36,9 +32,9 @@ export default function App() {
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'alerts' | 'village-map' | 'reports' | 'infrastructure' | 'terrain'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'infrastructure'>('map');
   const [villages, setVillages] = useState<VillageListItem[]>([]);
-  const [selectedVillageId, setSelectedVillageId] = useState<string>('V001');
+  const [selectedVillageId, setSelectedVillageId] = useState<string>('NARSING_BATLA');
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
 
   useEffect(() => {
@@ -54,9 +50,9 @@ export default function App() {
           if (lastSim.rainfall_info) setRainfallInfo(lastSim.rainfall_info);
         }
         
-        const initialBaseline = await fetchVillageBaseline('V001');
+        const initialBaseline = await fetchVillageBaseline('NARSING_BATLA');
         setBaseline(initialBaseline);
-        const rInfo = await fetchRainfallInfo('V001');
+        const rInfo = await fetchRainfallInfo('NARSING_BATLA');
         setRainfallInfo(rInfo);
       } catch (err) {
         console.error("Initialization failed", err);
@@ -66,6 +62,7 @@ export default function App() {
   }, []);
 
   const handleVillageSelect = async (id: string) => {
+    console.log("Village select triggered:", id);
     setSelectedVillageId(id);
     setLoading(true);
     try {
@@ -129,28 +126,6 @@ export default function App() {
             Map
           </button>
           <button 
-            onClick={() => setActiveTab('village-map')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
-              activeTab === 'village-map' 
-                ? 'bg-earth-primary text-white shadow-lg' 
-                : 'text-zinc-500 hover:bg-zinc-100'
-            }`}
-          >
-            <Sprout className="w-4 h-4" />
-            Soil &Crops
-          </button>
-          <button 
-            onClick={() => setActiveTab('terrain')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
-              activeTab === 'terrain' 
-                ? 'bg-earth-primary text-white shadow-lg' 
-                : 'text-zinc-500 hover:bg-zinc-100'
-            }`}
-          >
-            <Mountain className="w-4 h-4" />
-            Terrain
-          </button>
-          <button 
             onClick={() => setActiveTab('dashboard')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
               activeTab === 'dashboard' 
@@ -160,6 +135,17 @@ export default function App() {
           >
             <LayoutDashboard className="w-4 h-4" />
             Dashboard
+          </button>
+          <button 
+            onClick={() => setActiveTab('village-map')}
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              activeTab === 'village-map' 
+                ? 'bg-earth-primary text-white shadow-lg' 
+                : 'text-zinc-500 hover:bg-zinc-100'
+            }`}
+          >
+            <Sprout className="w-4 h-4" />
+            Soil & Crops
           </button>
           <button 
             onClick={() => setActiveTab('reports')}
@@ -182,17 +168,6 @@ export default function App() {
           >
             <Settings className="w-4 h-4" />
             Infrastructure
-          </button>
-          <button 
-            onClick={() => setActiveTab('alerts')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
-              activeTab === 'alerts' 
-                ? 'bg-earth-primary text-white shadow-lg' 
-                : 'text-zinc-500 hover:bg-zinc-100'
-            }`}
-          >
-            <Bell className="w-4 h-4" />
-            Alerts
           </button>
         </nav>
       </header>
@@ -284,10 +259,6 @@ export default function App() {
               </div>
             )}
 
-            {activeTab === 'terrain' && (
-              <TerrainMap selectedVillageId={selectedVillageId} />
-            )}
-
             {activeTab === 'dashboard' && (
               <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
                 <Dashboard 
@@ -321,11 +292,6 @@ export default function App() {
               </div>
             )}
 
-            {activeTab === 'alerts' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
-                <Alerts alerts={simulation?.alerts || []} />
-              </div>
-            )}
           </motion.div>
         </AnimatePresence>
       </main>

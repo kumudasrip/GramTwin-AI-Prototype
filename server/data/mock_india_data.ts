@@ -12,40 +12,16 @@ export interface VillageBaseline {
 }
 
 export const villages: Record<string, VillageBaseline> = {
-  "Village_A": {
-    id: "Village_A",
-    name: "Anantapur Rural",
-    population: 4500,
-    households: 1000,
-    livestock: 800,
+  "NARSING_BATLA": {
+    id: "NARSING_BATLA",
+    name: "Narsing Batla",
+    population: 4236,
+    households: 1070,
+    livestock: 245,
     main_crop: "Paddy",
-    groundwater_level: "Declining",
-    groundwater_level_initial: 25.0,
-    district: "Anantapur",
-    state: "Andhra Pradesh"
-  },
-  "Village_B": {
-    id: "Village_B",
-    name: "Baramati North",
-    population: 3200,
-    households: 750,
-    livestock: 1200,
-    main_crop: "Millets",
-    groundwater_level: "Stable",
-    groundwater_level_initial: 45.0,
-    district: "Pune",
-    state: "Maharashtra"
-  },
-  "Village_C": {
-    id: "Village_C",
-    name: "Chittoor East",
-    population: 5800,
-    households: 1300,
-    livestock: 600,
-    main_crop: "Pulses",
-    groundwater_level: "Critical",
-    groundwater_level_initial: 15.0,
-    district: "Chittoor",
+    groundwater_level: "Semi-Critical",
+    groundwater_level_initial: 12.5,
+    district: "Nizamabad",
     state: "Andhra Pradesh"
   }
 };

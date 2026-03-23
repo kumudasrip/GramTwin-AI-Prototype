@@ -1,0 +1,69 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Paddy Field Zone (North)",
+        "crop": "Paddy",
+        "area_hectares": 68,
+        "percentage": 45,
+        "soil_type": "Black soil",
+        "irrigation": "Canal + Well",
+        "yield_quintals": 48
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.164, 17.055], [79.167, 17.055], [79.167, 17.050], [79.164, 17.050], [79.164, 17.055]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cotton Field Zone (East)",
+        "crop": "Cotton",
+        "area_hectares": 38,
+        "percentage": 25,
+        "soil_type": "Red loam",
+        "irrigation": "Well",
+        "yield_quintals": 22
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.171, 17.052], [79.174, 17.052], [79.174, 17.046], [79.171, 17.046], [79.171, 17.052]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Millets Field Zone (South)",
+        "crop": "Millets",
+        "area_hectares": 23,
+        "percentage": 15,
+        "soil_type": "Red loam",
+        "irrigation": "Rainfed + Well",
+        "yield_quintals": 14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.168, 17.035], [79.171, 17.035], [79.171, 17.038], [79.168, 17.038], [79.168, 17.035]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pulses Zone (West)",
+        "crop": "Pulses",
+        "area_hectares": 15,
+        "percentage": 10,
+        "soil_type": "Black soil",
+        "irrigation": "Rainfed",
+        "yield_quintals": 8
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[79.164, 17.040], [79.167, 17.040], [79.167, 17.045], [79.164, 17.045], [79.164, 17.040]]]
+      }
+    }
+  ]
+}

@@ -3,14 +3,9 @@
   "features": [
     {
       "type": "Feature",
-      "id": "NARSING_BATLA",
       "properties": {
         "village_id": "NARSING_BATLA",
-        "village_name": "Narsing Batla",
-        "state": "Andhra Pradesh",
-        "district": "Nizamabad",
-        "population": 4236,
-        "households": 1070
+        "name": "Narsing Batla"
       },
       "geometry": {
         "type": "Polygon",

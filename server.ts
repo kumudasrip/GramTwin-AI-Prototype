@@ -100,6 +100,72 @@ async function startServer() {
     res.json(getLatestAlerts());
   });
 
+  // Get alerts for a specific village based on its baseline data
+  app.get("/api/village/:id/alerts", (req, res) => {
+    const villageId = req.params.id;
+    const baseline = getBaselineData();
+    
+    const alerts: string[] = [];
+    
+    // Generate contextual alerts based on village id and data
+    if (villageId === 'NARSING_BATLA') {
+      alerts.push(
+        // Critical groundwater alerts
+        "⚠️ GROUNDWATER STATUS: Semi-Critical (73% development stage). Current utilization: 80 MCM of available 110 MCM.",
+        "📊 GROUNDWATER MANAGEMENT: At current utilization rate, groundwater reserves are under pressure. Plan water conservation measures.",
+        "💧 IRRIGATION RECOMMENDATION: With 4,236 population in 1,070 households and 284 wells, prioritize efficient drip irrigation for high-water crops (Paddy).",
+        
+        // Crop-specific alerts
+        "🌾 PRIMARY CROP - PADDY (45% area): Highest water demand crop. Recommended: Micro-irrigation in summer seasons. Average water requirement: 1200 mm/season.",
+        "🌿 SECONDARY CROPS: Cotton (25%), Millets (15%), Pulses (10%) - more water-efficient. Consider crop rotation for groundwater recovery.",
+        
+        // Rainfall-based alerts
+        "🌧️ SEASONAL OBSERVATION: Monsoon months (Jul-Aug) receive 250-270mm/month. Rainwater harvesting during monsoon can reduce groundwater extraction by 40-50%.",
+        
+        // Infrastructure alerts
+        "🏗️ WATER INFRASTRUCTURE: 284 wells, 145 bore wells, 3 ponds, 2 irrigation channels. Current well density adequate. Recommend check dams and farm ponds to improve recharge.",
+        
+        // Soil-based recommendations
+        "🌱 SOIL MANAGEMENT: Black soil and red loam prevalent. High infiltration potential - good for groundwater recharge. Plan percolation tanks in summer.",
+        
+        // Population and household alerts
+        "👥 POPULATION WATER NEEDS: 4,236 population requires ~210 liters/day (total ~890,000L daily). Ensure adequate drinking water access in dry seasons (Mar-Jun).",
+        
+        // Seasonal planning
+        "📅 CRITICAL MONTHS: Apr-Jun - expect low rainfall and high irrigation demand. Pre-monsoon (Feb-Mar) - fill water bodies for summer use.",
+        
+        // Action items
+        "✅ ACTION ITEMS: 1) Install more check dams 2) Promote drip irrigation 3) Run monsoon water harvesting 4) Monitor well depths monthly 5) Plan crop diversification"
+      );
+    } else if (villageId === 'V001') {
+      alerts.push(
+        "V001: Water stress projected in summer months (Apr-Jun). Plan irrigation accordingly.",
+        "Black soil area: High moisture retention - optimize for water-intensive crops like rice.",
+        "Monitor groundwater levels - currently declining trend detected."
+      );
+    } else if (villageId === 'V002') {
+      alerts.push(
+        "V002: Mixed soil composition requires adaptive irrigation strategies.",
+        "Laterite soil in North Zone: Lower fertility - consider specialized fertilization.",
+        "Agriculture-dependent economy: Focus on drought-resistant crops in dry season."
+      );
+    } else if (villageId === 'V003') {
+      alerts.push(
+        "V003: Predominantly sandy/red soil - requires careful water management.",
+        "High evaporation risk: Implement mulching and rainwater harvesting structures.",
+        "Groundwater depth: Monitor seasonal variations for irrigation scheduling."
+      );
+    } else {
+      alerts.push(
+        "Welcome to GramTwin AI - Your Agricultural Digital Twin",
+        "Run a simulation from the Dashboard to analyze water security for this village",
+        "Monitor groundwater levels and plan irrigation schedules based on seasonal rainfall forecasts"
+      );
+    }
+    
+    res.json(alerts);
+  });
+
   // ===== New API Endpoints for Reports & Infrastructure =====
 
   // Get village metadata with soil types and crop information

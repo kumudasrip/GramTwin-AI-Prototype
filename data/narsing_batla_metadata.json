@@ -1,0 +1,80 @@
+{
+  "id": "NARSING_BATLA",
+  "name": "Narsing Batla",
+  "state": "Andhra Pradesh",
+  "district": "Nizamabad",
+  "population": 4236,
+  "households": 1070,
+  "demography": {
+    "male": 2141,
+    "female": 2095,
+    "children_0_6": 482,
+    "scheduled_caste": 522
+  },
+  "centroid": [79.17, 17.049],
+  "crops": [
+    {
+      "name": "Paddy",
+      "percentage": 45,
+      "water_requirement": 1200,
+      "season": "Kharif",
+      "area_hectares": 247.5
+    },
+    {
+      "name": "Cotton",
+      "percentage": 25,
+      "water_requirement": 700,
+      "season": "Kharif",
+      "area_hectares": 137.5
+    },
+    {
+      "name": "Millets",
+      "percentage": 15,
+      "water_requirement": 400,
+      "season": "Rabi",
+      "area_hectares": 82.5
+    },
+    {
+      "name": "Pulses",
+      "percentage": 10,
+      "water_requirement": 450,
+      "season": "Rabi",
+      "area_hectares": 55
+    },
+    {
+      "name": "Others",
+      "percentage": 5,
+      "water_requirement": 300,
+      "season": "Mixed",
+      "area_hectares": 27.5
+    }
+  ],
+  "groundwater": {
+    "availability_mcm": 110,
+    "utilisation_mcm": 80,
+    "stage_development_percent": 73,
+    "status": "Semi-Critical",
+    "wells_count": 284,
+    "avg_depth_m": 12.5
+  },
+  "soil": {
+    "types": ["Black soil", "Red loam", "Alluvial"],
+    "ph_range": "6.5-7.5",
+    "fertility": "Medium",
+    "erosion_risk": "Low"
+  },
+  "infrastructure": {
+    "ponds": 3,
+    "wells": 284,
+    "bore_wells": 145,
+    "irrigation_channels": 2,
+    "roads": "Good",
+    "electricity": "Available"
+  },
+  "climate": {
+    "annual_rainfall_mm": 945,
+    "temp_max_c": 42,
+    "temp_min_c": 12,
+    "humidity_percent": 62
+  }
+}

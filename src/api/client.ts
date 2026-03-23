@@ -104,6 +104,11 @@ export const fetchAlerts = async (): Promise<string[]> => {
   return res.json();
 };
 
+export const fetchVillageAlerts = async (villageId: string): Promise<string[]> => {
+  const res = await fetch(`/api/village/${villageId}/alerts`);
+  return res.json();
+};
+
 // ===== New API Functions for Reports and Infrastructure =====
 
 export interface VillageReport {

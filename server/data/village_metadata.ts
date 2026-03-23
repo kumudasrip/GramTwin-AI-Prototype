@@ -151,6 +151,30 @@ export const CROP_SUITABILITY: Record<string, CropSuitability> = {
 
 // Village-specific metadata
 export const VILLAGE_METADATA: Record<string, VillageMetadata> = {
+  NARSING_BATLA: {
+    villageId: "NARSING_BATLA",
+    villageName: "Narsing Batla",
+    soilComposition: [
+      { soilType: "clayey", percentage: 45, coordinates: [{lat: 17.053, lng: 79.170}] }, // Black soil (clayey) - North zone
+      { soilType: "reddish", percentage: 35, coordinates: [{lat: 17.048, lng: 79.173}] }, // Red loam - East zone
+      { soilType: "alluvial", percentage: 20, coordinates: [{lat: 17.042, lng: 79.168}] } // Bottom areas
+    ],
+    suitableCrops: [
+      CROP_SUITABILITY.paddy,
+      CROP_SUITABILITY.cotton,
+      CROP_SUITABILITY.millets,
+      CROP_SUITABILITY.groundnut
+    ],
+    currentWaterStatus: "Moderate",
+    currentClimateStatus: "Moderate",
+    infrastructureNeeds: [
+      "Check dams for monsoon water harvesting",
+      "Pond deepening and renovation",
+      "Drip irrigation system installation",
+      "Well water level monitoring system",
+      "Farm ponds in high-infiltration areas"
+    ]
+  },
   V001: {
     villageId: "V001",
     villageName: "Village V001",
