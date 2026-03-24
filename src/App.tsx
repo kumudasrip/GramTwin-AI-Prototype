@@ -17,9 +17,10 @@ import VillageSearch from './components/VillageSearch';
 import ReportPage from './components/ReportPage';
 import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
-import Login from './components/Login';
+import NewLoginPage from './components/NewLoginPage';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { useTranslation } from './hooks/useTranslation';
+import { useAuth } from './contexts/AuthContext';
 import { 
   fetchVillageList, 
   fetchVillageBaseline, 
@@ -29,12 +30,10 @@ import {
   SimulationResult, 
   VillageListItem 
 } from './api/client';
-import { isAuthenticated, clearSession, getUserInfo, verifyCode, createSession, saveSession } from './utils/auth';
 
-export default function App() {
+function AppContent() {
   const { t } = useTranslation();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isAuthenticated());
-  const [authLoading, setAuthLoading] = useState(false);
+  const { isAuthenticated, login, loginAsCitizen, logout } = useAuth();
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -43,45 +42,30 @@ export default function App() {
   const [selectedVillageId, setSelectedVillageId] = useState<string>('NARSING_BATLA');
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
 
-  // Handle login
-  const handleLogin = async (organizationType: string, placeName: string, verificationCode: string) => {
-    setAuthLoading(true);
-    try {
-      // Verify the code against backend
-      const isValid = await verifyCode(organizationType, placeName, verificationCode);
-      if (!isValid) {
-        throw new Error('Invalid verification code');
-      }
+  // Handle new login flows
+  const handleCitizenLogin = () => {
+    loginAsCitizen();
+  };
 
-      // Create and save session
-      const session = createSession(organizationType, placeName);
-      saveSession(session);
-      setIsLoggedIn(true);
-    } catch (err) {
-      console.error('Login failed:', err);
-      throw err;
-    } finally {
-      setAuthLoading(false);
-    }
+  const handleOrgLogin = async (email: string, orgType: string, placeName: string, role: 'org') => {
+    login(email, orgType, placeName, role);
   };
 
   // Handle logout
   const handleLogout = () => {
-    clearSession();
-    setIsLoggedIn(false);
+    logout();
     setBaseline(null);
     setSimulation(null);
     setActiveTab('map');
   };
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isAuthenticated) return;
 
     const init = async () => {
       try {
         const vList = await fetchVillageList();
         setVillages(vList);
-        // Don't load last simulation - only show simulation when user clicks Execute Simulation button
         
         const initialBaseline = await fetchVillageBaseline('NARSING_BATLA');
         setBaseline(initialBaseline);
@@ -92,7 +76,7 @@ export default function App() {
       }
     };
     init();
-  }, [isLoggedIn]);
+  }, [isAuthenticated]);
 
   const handleVillageSelect = async (id: string) => {
     console.log("Village select triggered:", id);
@@ -133,17 +117,15 @@ export default function App() {
 
   const latestRisk = simulation?.timeline[simulation.timeline.length - 1]?.risk;
 
-  // Show login page if not authenticated
-  if (!isLoggedIn) {
+  // Show new login page if not authenticated
+  if (!isAuthenticated) {
     return (
-      <Login 
-        onLogin={handleLogin}
-        loading={authLoading}
+      <NewLoginPage
+        onCitizenLogin={handleCitizenLogin}
+        onOrgLogin={handleOrgLogin}
       />
     );
   }
-
-  const userInfo = getUserInfo();
 
   return (
     <div className="app-container">
@@ -217,18 +199,13 @@ export default function App() {
           </button>
           <div className="ml-4 pl-4 border-l border-zinc-200 flex items-center gap-3">
             <LanguageSwitcher />
-            {userInfo && (
-              <div className="flex items-center gap-2 text-xs text-zinc-600 font-medium">
-                <span>{userInfo.placeName}</span>
-                <button 
-                  onClick={handleLogout}
-                  className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-red-600"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+            <button 
+              onClick={handleLogout}
+              className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-red-600"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </nav>
       </header>
@@ -371,3 +348,5 @@ export default function App() {
     </div>
   );
 }
+
+export default AppContent;
