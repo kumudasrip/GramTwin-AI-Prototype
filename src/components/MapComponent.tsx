@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, CircleMarker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { fetchVillageBoundaries, fetchVillageFields, fetchVillageWells, fetchVillageFloodRisk } from '../api/client';
+import { useTranslation } from '../hooks/useTranslation';
 
 // Fix Leaflet icon issue
 // @ts-ignore
@@ -33,6 +34,7 @@ const MapUpdater: React.FC<{ center: [number, number] }> = ({ center }) => {
 };
 
 const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillageSelect, simulationRisk }) => {
+  const { t } = useTranslation();
   const [boundaries, setBoundaries] = useState<any>(null);
   const [fields, setFields] = useState<any>(null);
   const [wells, setWells] = useState<any>(null);
@@ -155,9 +157,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
           >
             <Popup>
               <div className="text-xs text-zinc-900">
-                <p className="font-bold">Well: {well.properties.well_id}</p>
-                <p>Level: {well.properties.groundwater_level}m</p>
-                <p>Status: {well.properties.status}</p>
+                <p className="font-bold">{t('mapComponent.well')}: {well.properties.well_id}</p>
+                <p>{t('mapComponent.level')}: {well.properties.groundwater_level}m</p>
+                <p>{t('mapComponent.status')}: {well.properties.status}</p>
               </div>
             </Popup>
           </CircleMarker>
@@ -166,31 +168,31 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedVillageId, onVillag
       
       {/* Legend */}
       <div className="legend-panel">
-        <h4 className="legend-title">Map Legend</h4>
+        <h4 className="legend-title">{t('mapComponent.legend')}</h4>
         <div className="space-y-3">
           <div className="legend-item">
             <div className="w-5 h-5 rounded-full bg-[#1e3a8a]/30 border border-[#1e3a8a] shadow-sm" />
-            <span className="font-medium">Village Boundary</span>
+            <span className="font-medium">{t('mapComponent.villageBoundary')}</span>
           </div>
           <div className="legend-item">
             <div className="w-5 h-5 rounded bg-[#1e3a8a]/60 border border-white shadow-sm" />
-            <span className="font-medium">Paddy Fields</span>
+            <span className="font-medium">{t('mapComponent.paddyFields')}</span>
           </div>
           <div className="legend-item">
             <div className="w-5 h-5 rounded bg-[#d97706]/60 border border-white shadow-sm" />
-            <span className="font-medium">Millet Fields</span>
+            <span className="font-medium">{t('mapComponent.milletFields')}</span>
           </div>
           <div className="legend-item">
             <div className="w-5 h-5 rounded bg-[#dc2626]/40 border border-white shadow-sm" />
-            <span className="font-medium">Flood Risk Zone</span>
+            <span className="font-medium">{t('mapComponent.floodRiskZone')}</span>
           </div>
           <div className="legend-item">
             <div className="w-5 h-5 rounded-full bg-[#047857] border-2 border-white shadow-sm" />
-            <span className="font-medium">Healthy Well</span>
+            <span className="font-medium">{t('mapComponent.healthyWell')}</span>
           </div>
           <div className="legend-item">
             <div className="w-5 h-5 rounded-full bg-[#dc2626] border-2 border-white shadow-sm" />
-            <span className="font-medium">Stressed Well</span>
+            <span className="font-medium">{t('mapComponent.stressedWell')}</span>
           </div>
         </div>
       </div>

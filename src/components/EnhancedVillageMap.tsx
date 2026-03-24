@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, GeoJSON, CircleMarker, Popup, useMap } from 'r
 import L from 'leaflet';
 import { fetchVillageBoundaries, fetchVillageFields, fetchVillageWells, fetchVillageMetadata, VillageMetadata } from '../api/client';
 import { Map as MapIcon, Leaf } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 // @ts-ignore
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -37,46 +38,47 @@ interface SoilMarkerProps {
   soil: SoilDataPoint;
   idx: number;
   soilColorInfo: { color: string; description: string };
+  t: (key: string) => string;
 }
 
-const SoilMarker: React.FC<SoilMarkerProps> = ({ soil, idx, soilColorInfo }) => {
+const SoilMarker: React.FC<SoilMarkerProps> = ({ soil, idx, soilColorInfo, t }) => {
   const markerRef = React.useRef<any>(null);
 
   const popupContent = `
     <div style="width: 320px; font-size: 14px; color: #18181b;">
       <h4 style="font-weight: bold; font-size: 18px; margin-bottom: 8px; color: #b45309;">${soil.soilType}</h4>
       <div style="background-color: #f3f4f6; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-        <p style="color: #374151; font-weight: 600; font-size: 11px; text-transform: uppercase;">Region: ${soil.region}</p>
+        <p style="color: #374151; font-weight: 600; font-size: 11px; text-transform: uppercase;">${t('enhancedVillageMap.region')}: ${soil.region}</p>
       </div>
       
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; font-size: 12px;">
         <div style="background-color: #dbeafe; padding: 8px; border-radius: 4px;">
-          <p style="color: #4b5563;">Fertility</p>
+          <p style="color: #4b5563;">${t('enhancedVillageMap.fertility')}</p>
           <p style="font-weight: bold; color: #1e40af;">${soil.fertility}</p>
         </div>
         <div style="background-color: #f3e8ff; padding: 8px; border-radius: 4px;">
-          <p style="color: #4b5563;">pH Level</p>
+          <p style="color: #4b5563;">${t('enhancedVillageMap.phLevel')}</p>
           <p style="font-weight: bold; color: #6b21a8;">${soil.pH.toFixed(1)}</p>
         </div>
         <div style="background-color: #dcfce7; padding: 8px; border-radius: 4px;">
-          <p style="color: #4b5563;">Water Retention</p>
+          <p style="color: #4b5563;">${t('enhancedVillageMap.waterRetention')}</p>
           <p style="font-weight: bold; color: #15803d;">${soil.waterRetention}</p>
         </div>
         <div style="background-color: #fed7aa; padding: 8px; border-radius: 4px;">
-          <p style="color: #4b5563;">Organic Matter</p>
-          <p style="font-weight: bold; color: #b45309;">${soil.organicMatter || 'N/A'}%</p>
+          <p style="color: #4b5563;">${t('enhancedVillageMap.organicMatter')}</p>
+          <p style="font-weight: bold; color: #b45309;">${soil.organicMatter || t('enhancedVillageMap.na')}%</p>
         </div>
       </div>
 
       ${soil.nitrogen ? `
       <div style="background-color: #fef3c7; padding: 8px; border-radius: 4px; margin-bottom: 12px; font-size: 12px;">
-        <p style="font-weight: 600; color: #374151; margin-bottom: 4px;">NPK Values:</p>
+        <p style="font-weight: 600; color: #374151; margin-bottom: 4px;">${t('enhancedVillageMap.npkValues')}</p>
         <p>N: ${soil.nitrogen} mg/kg | P: ${soil.phosphorus} mg/kg | K: ${soil.potassium} mg/kg</p>
       </div>
       ` : ''}
 
       <div style="background-color: #f3f4f6; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-        <p style="font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #374151;">Suitable Crops:</p>
+        <p style="font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #374151;">${t('enhancedVillageMap.suitableCrops')}</p>
         <div style="display: flex; flex-wrap: wrap; gap: 4px;">
           ${soil.crops.map((crop) => `<span style="background-color: #bbf7d0; color: #166534; font-size: 12px; padding: 4px 8px; border-radius: 4px;">${crop}</span>`).join('')}
         </div>
@@ -156,6 +158,7 @@ interface SoilDataPoint {
 }
 
 export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect }: EnhancedVillageMapProps) {
+  const { t } = useTranslation();
   const [boundaries, setBoundaries] = useState<any>(null);
   const [fields, setFields] = useState<any>(null);
   const [wells, setWells] = useState<any>(null);
@@ -466,9 +469,9 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
               >
                 <Popup>
                   <div className="text-xs text-zinc-900">
-                    <p className="font-bold">Well: {well.properties.well_id}</p>
-                    <p>Level: {well.properties.groundwater_level}m</p>
-                    <p>Status: {well.properties.status}</p>
+                    <p className="font-bold">{t('mapComponent.well')}: {well.properties.well_id}</p>
+                    <p>{t('mapComponent.level')}: {well.properties.groundwater_level}m</p>
+                    <p>{t('mapComponent.status')}: {well.properties.status}</p>
                   </div>
                 </Popup>
               </CircleMarker>
@@ -482,7 +485,8 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
                   key={`soil-${idx}`}
                   soil={soil} 
                   idx={idx} 
-                  soilColorInfo={soilColorInfo} 
+                  soilColorInfo={soilColorInfo}
+                  t={t}
                 />
               );
             })}
@@ -524,27 +528,27 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
 
           {/* Legend */}
           <div className="legend-panel">
-            <h4 className="legend-title">Map Legend</h4>
+            <h4 className="legend-title">{t('mapComponent.legend')}</h4>
             <div className="space-y-2 text-xs">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded border border-[#1e3a8a] bg-[#1e3a8a]/20" />
-                <span>Village Boundary</span>
+                <span>{t('mapComponent.villageBoundary')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-[#1e3a8a]/60 border border-white" />
-                <span>Paddy</span>
+                <span>{t('mapComponent.paddyFields')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-[#d97706]/60 border border-white" />
-                <span>Millets</span>
+                <span>{t('mapComponent.milletFields')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-[#047857] border border-white" />
-                <span>Good Well</span>
+                <span>{t('mapComponent.healthyWell')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-[#dc2626] border border-white" />
-                <span>Stressed Well</span>
+                <span>{t('mapComponent.stressedWell')}</span>
               </div>
               <hr className="my-2" />
               <p className="font-semibold text-gray-700 mb-1">Soil Types (Click for details):</p>
@@ -577,7 +581,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
               onChange={(e) => setShowCropsLayer(e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm font-medium text-zinc-700">Show Crop Fields</span>
+            <span className="text-sm font-medium text-zinc-700">{t('enhancedVillageMap.fields')}</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -586,7 +590,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
               onChange={(e) => setShowSoilLayer(e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm font-medium text-zinc-700">Show Soil Info</span>
+            <span className="text-sm font-medium text-zinc-700">{t('enhancedVillageMap.wells')}</span>
           </label>
         </div>
       </div>

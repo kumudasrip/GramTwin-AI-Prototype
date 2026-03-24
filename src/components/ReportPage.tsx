@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { FileText, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { submitVillageReport, fetchLatestReport, VillageReport, BaselineData } from '../api/client';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface ReportPageProps {
   selectedVillageId: string;
@@ -23,12 +24,28 @@ const CHALLENGES = [
 ];
 
 export default function ReportPage({ selectedVillageId, baseline }: ReportPageProps) {
+  const { t } = useTranslation();
+  
+  const SUBMITTER_TYPES = [t('reports.panchayat'), t('reports.ngo'), t('reports.government')];
+  const WATER_STATUS_OPTIONS = [t('reports.excellent'), t('reports.good'), t('reports.moderate'), t('dashboard.low'), t('reports.critical')];
+  const CLIMATE_STATUS_OPTIONS = [t('reports.excellent'), t('reports.good'), t('reports.moderate'), t('reports.challenging'), t('reports.critical')];
+  const CHALLENGES = [
+    t('reports.waterScarcity'),
+    t('reports.poorSoilQuality'),
+    t('reports.irregularRainfall'),
+    t('reports.cropDiseases'),
+    t('reports.livestockIssues'),
+    t('reports.limitedIrrigation'),
+    t('reports.marketAccess'),
+    t('reports.infrastructureGap')
+  ];
+
   const [formData, setFormData] = useState({
     submittedBy: '',
-    submitterType: 'Panchayat' as 'Panchayat' | 'NGO' | 'Government',
-    waterStatus: 'Good' as const,
+    submitterType: t('reports.panchayat') as string,
+    waterStatus: t('reports.good') as const,
     waterDetails: '',
-    climateStatus: 'Good' as const,
+    climateStatus: t('reports.good') as const,
     climateDetails: '',
     currentChallenges: [] as string[],
     notes: ''
@@ -64,7 +81,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
     e.preventDefault();
     
     if (!formData.submittedBy.trim()) {
-      setError('Please enter submitter name');
+      setError(t('reports.pleaseFillBlanks'));
       return;
     }
 
@@ -83,10 +100,10 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
       // Reset form
       setFormData({
         submittedBy: '',
-        submitterType: 'Panchayat',
-        waterStatus: 'Good',
+        submitterType: t('reports.panchayat'),
+        waterStatus: t('reports.good'),
         waterDetails: '',
-        climateStatus: 'Good',
+        climateStatus: t('reports.good'),
         climateDetails: '',
         currentChallenges: [],
         notes: ''
@@ -95,7 +112,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
       // Hide success message after 3 seconds
       setTimeout(() => setSubmitted(false), 3000);
     } catch (err) {
-      setError('Failed to submit report. Please try again.');
+      setError(t('reports.submissionError'));
       console.error('Submission failed', err);
     } finally {
       setLoading(false);
@@ -110,8 +127,8 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
           <FileText className="w-6 h-6 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-earth-primary">Village Status Report</h1>
-          <p className="text-zinc-500">Submit water, climate, and infrastructure status for {baseline?.village_name || selectedVillageId}</p>
+          <h1 className="text-3xl font-bold text-earth-primary">{t('reports.title')}</h1>
+          <p className="text-zinc-500">{t('reports.submit')} {baseline?.village_name || selectedVillageId}</p>
         </div>
       </div>
 
@@ -127,21 +144,21 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Submitter Info */}
               <div className="space-y-4 pb-6 border-b border-zinc-100">
-                <h3 className="text-lg font-semibold text-earth-primary">Submitter Information</h3>
+                <h3 className="text-lg font-semibold text-earth-primary">{t('reports.submittedBy')}</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 mb-2">Name</label>
+                    <label className="block text-sm font-medium text-zinc-700 mb-2">{t('common.name')}</label>
                     <input
                       type="text"
                       value={formData.submittedBy}
                       onChange={(e) => setFormData(prev => ({ ...prev, submittedBy: e.target.value }))}
-                      placeholder="Enter your name"
+                      placeholder={t('common.name')}
                       className="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-primary/50"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 mb-2">Organization Type</label>
+                    <label className="block text-sm font-medium text-zinc-700 mb-2">{t('reports.submitterType')}</label>
                     <select
                       value={formData.submitterType}
                       onChange={(e) => setFormData(prev => ({ ...prev, submitterType: e.target.value as any }))}
@@ -157,10 +174,10 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
 
               {/* Water Status */}
               <div className="space-y-4 pb-6 border-b border-zinc-100">
-                <h3 className="text-lg font-semibold text-earth-primary">Water Status</h3>
+                <h3 className="text-lg font-semibold text-earth-primary">{t('reports.waterStatus')}</h3>
                 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-3">Current Water Condition</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-3">{t('dashboard.waterStock')}</label>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                     {WATER_STATUS_OPTIONS.map(status => (
                       <button
@@ -180,11 +197,11 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-2">Water Details</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-2">{t('reports.waterDetails')}</label>
                   <textarea
                     value={formData.waterDetails}
                     onChange={(e) => setFormData(prev => ({ ...prev, waterDetails: e.target.value }))}
-                    placeholder="Describe the current water situation: groundwater levels, wells status, water quality, etc."
+                    placeholder={t('reports.additionalInfo')}
                     className="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-primary/50 h-24 resize-none"
                   />
                 </div>
@@ -192,10 +209,10 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
 
               {/* Climate Status */}
               <div className="space-y-4 pb-6 border-b border-zinc-100">
-                <h3 className="text-lg font-semibold text-earth-primary">Climate Status</h3>
+                <h3 className="text-lg font-semibold text-earth-primary">{t('reports.climateStatus')}</h3>
                 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-3">Current Climate Condition</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-3">{t('reports.currentClimateCondition')}</label>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                     {CLIMATE_STATUS_OPTIONS.map(status => (
                       <button
@@ -215,11 +232,11 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-2">Climate Details</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-2">{t('reports.climateDetails')}</label>
                   <textarea
                     value={formData.climateDetails}
                     onChange={(e) => setFormData(prev => ({ ...prev, climateDetails: e.target.value }))}
-                    placeholder="Describe the current climate: rainfall, temperature, wind, crop conditions, etc."
+                    placeholder={t('reports.climateInfo')}
                     className="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-primary/50 h-24 resize-none"
                   />
                 </div>
@@ -227,8 +244,8 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
 
               {/* Current Challenges */}
               <div className="space-y-4 pb-6 border-b border-zinc-100">
-                <h3 className="text-lg font-semibold text-earth-primary">Current Challenges</h3>
-                <p className="text-sm text-zinc-600">Select all that apply</p>
+                <h3 className="text-lg font-semibold text-earth-primary">{t('reports.currentChallenges')}</h3>
+                <p className="text-sm text-zinc-600">{t('reports.selectAllApply')}</p>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {CHALLENGES.map(challenge => (
@@ -261,11 +278,11 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
 
               {/* Additional Notes */}
               <div className="space-y-4">
-                <label className="block text-sm font-medium text-zinc-700">Additional Notes</label>
+                <label className="block text-sm font-medium text-zinc-700">{t('reports.additionalNotes')}</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                  placeholder="Any additional information or recommendations..."
+                  placeholder={t('reports.additionalRecommendations')}
                   className="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-primary/50 h-20 resize-none"
                 />
               </div>
@@ -285,7 +302,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
                 className="w-full py-3 bg-earth-primary text-white font-semibold rounded-lg hover:bg-earth-primary/90 disabled:bg-zinc-400 transition-colors flex items-center justify-center gap-2"
               >
                 <Send className="w-5 h-5" />
-                {loading ? 'Submitting...' : 'Submit Report'}
+                {loading ? t('reports.submitting') : t('reports.submit')}
               </button>
             </form>
           </motion.div>
@@ -299,7 +316,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
               className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3"
             >
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <p className="text-sm font-medium text-green-700">Report submitted successfully!</p>
+              <p className="text-sm font-medium text-green-700">{t('reports.submissionSuccess')}</p>
             </motion.div>
           )}
         </div>
@@ -315,7 +332,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
             >
               <h3 className="text-lg font-semibold text-earth-primary mb-4 flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />
-                Latest Report
+                {t('reports.latestReport')}
               </h3>
               
               <div className="space-y-4 text-sm">

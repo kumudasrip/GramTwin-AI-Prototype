@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Settings, Upload, AlertCircle, MapPin, Zap, TrendingUp } from 'lucide-react';
 import { fetchInfrastructureRecommendations, uploadDumpyardPhoto, InfrastructureRecommendation, BaselineData } from '../api/client';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface InfrastructureRecommendationsProps {
   selectedVillageId: string;
@@ -26,11 +27,20 @@ export default function InfrastructureRecommendations({
   selectedVillageId, 
   baseline 
 }: InfrastructureRecommendationsProps) {
-  const [recommendations, setRecommendations] = useState<InfrastructureRecommendation[]>([]);
+  const { t } = useTranslation();
+
+  const TYPE_ICONS: Record<string, React.ReactNode> = {
+    [t('infrastructure.waterManagement')]: <Zap className="w-5 h-5" />,
+    [t('infrastructure.soilImprovement')]: <AlertCircle className="w-5 h-5" />,
+    [t('infrastructure.climateAdaptation')]: <TrendingUp className="w-5 h-5" />,
+    [t('infrastructure.generalInfrastructure')]: <Settings className="w-5 h-5" />,
+    [t('infrastructure.dumpyardManagement')]: <MapPin className="w-5 h-5" />,
+  };
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [recommendations, setRecommendations] = useState<InfrastructureRecommendation[]>([]);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -82,8 +92,8 @@ export default function InfrastructureRecommendations({
           <Settings className="w-6 h-6 text-purple-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-earth-primary">Infrastructure Recommendations</h1>
-          <p className="text-zinc-500">Development priorities for {baseline?.village_name || selectedVillageId}</p>
+          <h1 className="text-3xl font-bold text-earth-primary">{t('infrastructure.title')}</h1>
+          <p className="text-zinc-500">{t('infrastructure.developmentPriorities')} {baseline?.village_name || selectedVillageId}</p>
         </div>
       </div>
 
@@ -98,11 +108,11 @@ export default function InfrastructureRecommendations({
           >
             <h3 className="text-lg font-semibold text-earth-primary mb-4 flex items-center gap-2">
               <Upload className="w-5 h-5" />
-              Photo Analysis
+              {t('infrastructure.photoAnalysis')}
             </h3>
 
             <p className="text-sm text-zinc-600 mb-4">
-              Upload photos of dumpyard or infrastructure areas for AI-powered recommendations
+              {t('infrastructure.uploadPhotoDescription')}
             </p>
 
             <div className="space-y-4">
@@ -120,8 +130,8 @@ export default function InfrastructureRecommendations({
                   className="block w-full p-6 border-2 border-dashed border-zinc-300 rounded-lg hover:border-earth-primary/50 hover:bg-earth-primary/5 cursor-pointer transition-colors text-center"
                 >
                   <Upload className="w-8 h-8 text-zinc-400 mx-auto mb-2" />
-                  <p className="text-sm font-medium text-zinc-700">Click to upload or drag</p>
-                  <p className="text-xs text-zinc-500">PNG, JPG, GIF (max 5MB)</p>
+                  <p className="text-sm font-medium text-zinc-700">{t('infrastructure.clickToUpload')}</p>
+                  <p className="text-xs text-zinc-500">{t('infrastructure.fileInfo')}</p>
                 </label>
               </div>
 
@@ -143,7 +153,7 @@ export default function InfrastructureRecommendations({
                     disabled={uploading}
                     className="w-full py-2 bg-earth-primary text-white font-medium rounded hover:bg-earth-primary/90 disabled:bg-zinc-400 transition-colors text-sm"
                   >
-                    {uploading ? 'Analyzing...' : 'Analyze Photo'}
+                    {uploading ? t('infrastructure.analyzingPhoto') : t('infrastructure.analyzePhoto')}
                   </button>
                 </motion.div>
               )}
@@ -155,7 +165,7 @@ export default function InfrastructureRecommendations({
                   exit={{ opacity: 0 }}
                   className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700"
                 >
-                  ✓ Photos analyzed and recommendations added
+                  {t('infrastructure.photosAnalyzed')}
                 </motion.div>
               )}
             </div>
@@ -166,7 +176,7 @@ export default function InfrastructureRecommendations({
         <div className="lg:col-span-2">
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-zinc-500">Loading recommendations...</p>
+              <p className="text-zinc-500">{t('infrastructure.loadingRecommendations')}</p>
             </div>
           ) : recommendations.length > 0 ? (
             <div className="space-y-4">
@@ -201,13 +211,13 @@ export default function InfrastructureRecommendations({
                         <div className="grid grid-cols-2 gap-3 text-xs">
                           {rec.estimatedCost && (
                             <div>
-                              <p className="text-zinc-500 font-medium">Estimated Cost</p>
+                              <p className="text-zinc-500 font-medium">{t('infrastructure.estimatedCost')}</p>
                               <p className="text-earth-primary font-semibold">{rec.estimatedCost}</p>
                             </div>
                           )}
                           {rec.implementation && (
                             <div>
-                              <p className="text-zinc-500 font-medium">Implementation</p>
+                              <p className="text-zinc-500 font-medium">{t('infrastructure.implementation')}</p>
                               <p className="text-earth-primary font-semibold">{rec.implementation}</p>
                             </div>
                           )}
@@ -215,7 +225,7 @@ export default function InfrastructureRecommendations({
 
                         {rec.statusCondition && (
                           <p className="text-xs text-zinc-500 mt-3 pt-3 border-t border-zinc-100">
-                            <span className="font-medium">Based on:</span> {rec.statusCondition}
+                            <span className="font-medium">{t('infrastructure.basedOn')}</span> {rec.statusCondition}
                           </p>
                         )}
                       </div>
@@ -231,12 +241,12 @@ export default function InfrastructureRecommendations({
               animate={{ opacity: 1 }}
             >
               <Settings className="w-16 h-16 text-zinc-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-zinc-700 mb-2">No Recommendations Yet</h3>
+              <h3 className="text-lg font-semibold text-zinc-700 mb-2">{t('infrastructure.noRecommendations')}</h3>
               <p className="text-sm text-zinc-500 mb-4">
-                Upload a photo or submit a village report to generate infrastructure recommendations
+                {t('infrastructure.uploadForRecommendations')}
               </p>
               <p className="text-xs text-zinc-400">
-                Recommendations will appear here based on village conditions and uploaded data
+                {t('infrastructure.recommendationsHint')}
               </p>
             </motion.div>
           )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search as SearchIcon, X } from 'lucide-react';
 import { searchVillages, VillageListItem } from '../api/client';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface VillageSearchProps {
   onVillageSelect: (id: string, name: string) => void;
@@ -8,6 +9,7 @@ interface VillageSearchProps {
 }
 
 export default function VillageSearch({ onVillageSelect, selectedVillageId }: VillageSearchProps) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<VillageListItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +59,7 @@ export default function VillageSearch({ onVillageSelect, selectedVillageId }: Vi
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search villages..."
+          placeholder={t('villageSearch.placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query && setIsOpen(true)}
@@ -77,7 +79,7 @@ export default function VillageSearch({ onVillageSelect, selectedVillageId }: Vi
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
           {loading ? (
-            <div className="p-4 text-center text-sm text-zinc-500">Searching...</div>
+            <div className="p-4 text-center text-sm text-zinc-500">{t('villageSearch.searching')}</div>
           ) : results.length > 0 ? (
             <ul>
               {results.map((village) => (
@@ -93,7 +95,7 @@ export default function VillageSearch({ onVillageSelect, selectedVillageId }: Vi
               ))}
             </ul>
           ) : (
-            <div className="p-4 text-center text-sm text-zinc-500">No villages found</div>
+            <div className="p-4 text-center text-sm text-zinc-500">{t('villageSearch.noResults')}</div>
           )}
         </div>
       )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Play, Droplets, Sprout, Users, MapPin } from 'lucide-react';
 import { BaselineData, SimulationResult, VillageListItem } from '../api/client';
 import MapComponent from './MapComponent';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface DashboardProps {
   baseline: BaselineData | null;
@@ -24,6 +25,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   selectedVillageId,
   rainfallInfo
 }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     population: 4500,
     rainfall_forecast: 'Below normal',
@@ -50,16 +52,16 @@ const Dashboard: React.FC<DashboardProps> = ({
   }, [rainfallInfo]);
 
   const getGroundwaterStatus = (pop: number) => {
-    if (pop < 100) return { label: "Excellent", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200" };
-    if (pop <= 1000) return { label: "Good", color: "text-green-600", bg: "bg-green-50", border: "border-green-200" };
-    if (pop <= 5000) return { label: "Moderate", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" };
-    if (pop <= 10000) return { label: "Stressed", color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-200" };
-    return { label: "Critical", color: "text-red-600", bg: "bg-red-50", border: "border-red-200" };
+    if (pop < 100) return { label: t('dashboard.excellent'), color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200" };
+    if (pop <= 1000) return { label: t('dashboard.good'), color: "text-green-600", bg: "bg-green-50", border: "border-green-200" };
+    if (pop <= 5000) return { label: t('dashboard.moderate'), color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" };
+    if (pop <= 10000) return { label: t('dashboard.stressed'), color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-200" };
+    return { label: t('dashboard.critical'), color: "text-red-600", bg: "bg-red-50", border: "border-red-200" };
   };
 
   const gwStatus = getGroundwaterStatus(formData.population);
 
-  if (!baseline) return <div className="p-8 text-center">Loading village profile...</div>;
+  if (!baseline) return <div className="p-8 text-center">{t('dashboard.loadingVillageProfile')}</div>;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,12 +77,12 @@ const Dashboard: React.FC<DashboardProps> = ({
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <MapPin className="w-6 h-6 text-earth-primary" />
-                <h2 className="text-2xl font-bold text-earth-primary">Select Village</h2>
+                <h2 className="text-2xl font-bold text-earth-primary">{t('dashboard.selectVillage')}</h2>
               </div>
               {baseline.village_name && (
                 <div className="text-right">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Data Source</p>
-                  <p className="text-xs text-zinc-500">Census & IMD Historical Data</p>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.dataSource')}</p>
+                  <p className="text-xs text-zinc-500">{t('dashboard.censusIMD')}</p>
                 </div>
               )}
             </div>
@@ -96,8 +98,8 @@ const Dashboard: React.FC<DashboardProps> = ({
             
             {baseline.district && (
               <div className="mt-6 flex gap-4 text-xs text-zinc-500 font-semibold uppercase tracking-wider">
-                <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">District: {baseline.district}</span>
-                <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">State: {baseline.state}</span>
+                <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">{t('dashboard.district')}: {baseline.district}</span>
+                <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">{t('dashboard.state')}: {baseline.state}</span>
               </div>
             )}
           </div>
@@ -118,11 +120,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <Users className="w-7 h-7" />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Population</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.population')}</p>
                 <div className="flex items-center gap-2">
                   <p className="text-3xl font-bold text-earth-primary">{formData.population.toLocaleString()}</p>
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${formData.population > 5000 ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                    Live
+                    {t('dashboard.live')}
                   </span>
                 </div>
               </div>
@@ -132,7 +134,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <Sprout className="w-7 h-7" />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Main Crop</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.mainCrop')}</p>
                 <p className="text-3xl font-bold text-earth-primary">{formData.current_crop}</p>
               </div>
             </div>
@@ -141,7 +143,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <Droplets className="w-7 h-7" />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Groundwater</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.groundwater')}</p>
                 <div className="flex items-center gap-1">
                   <p className={`text-2xl font-bold ${gwStatus.color}`}>{gwStatus.label}</p>
                   <span className={gwStatus.color}>✓</span>
@@ -156,9 +158,9 @@ const Dashboard: React.FC<DashboardProps> = ({
           <div className="dashboard-card bg-white border-earth-primary/10 shadow-xl flex flex-col justify-center min-h-[280px] relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-earth-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
             <div className="relative z-10">
-              <h2 className="text-3xl font-extrabold mb-6 leading-tight text-earth-primary">GramTwin AI <br/><span className="text-earth-gold">Intelligence</span></h2>
+              <h2 className="text-3xl font-extrabold mb-6 leading-tight text-earth-primary">GramTwin AI <br/><span className="text-earth-gold">{t('dashboard.intelligence')}</span></h2>
               <p className="text-zinc-600 leading-relaxed text-lg">
-                Village-scale digital twin for rural India. Simulates water, crops, waste, and climate risks using Census + IMD data to help Gram Panchayats make proactive decisions.
+                {t('dashboard.description')}
               </p>
             </div>
           </div>
@@ -168,29 +170,29 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Simulation Form */}
       <div className="dashboard-card">
         <div className="flex justify-between items-center mb-8">
-          <h3 className="card-title !mb-0 !border-none">Simulation Scenarios</h3>
+          <h3 className="card-title !mb-0 !border-none">{t('dashboard.simulationScenarios')}</h3>
           {rainfallInfo && (
             <div className="text-right">
-              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Historical Rainfall (Last 12 months)</p>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.historicalRainfall')}</p>
               <p className="text-lg font-bold text-earth-gold">{rainfallInfo.avg_rainfall_mm} mm → {rainfallInfo.rainfall_category}</p>
             </div>
           )}
         </div>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
           <div className="space-y-3">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Rainfall Forecast</label>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.rainfallForecast')}</label>
             <select
               value={formData.rainfall_forecast}
               onChange={(e) => setFormData({ ...formData, rainfall_forecast: e.target.value })}
               className="select-input !py-4"
             >
-              <option value="Below normal">Below normal</option>
-              <option value="Normal">Normal</option>
-              <option value="Above normal">Above normal</option>
+              <option value="Below normal">{t('dashboard.below_normal')}</option>
+              <option value="Normal">{t('dashboard.normal')}</option>
+              <option value="Above normal">{t('dashboard.above_normal')}</option>
             </select>
           </div>
           <div className="space-y-3">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Population</label>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.population')}</label>
             <input
               type="number"
               value={formData.population}
@@ -199,7 +201,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             />
           </div>
           <div className="space-y-3">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Main Crop</label>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.mainCrop')}</label>
             <select
               value={formData.current_crop}
               onChange={(e) => setFormData({ ...formData, current_crop: e.target.value })}
@@ -218,7 +220,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             >
               <div className="flex items-center justify-center gap-3">
                 <Play className={`w-6 h-6 ${loading ? 'animate-pulse' : ''}`} />
-                {loading ? 'Processing Simulation...' : 'Execute Simulation'}
+                {loading ? t('dashboard.processingSimulation') : t('dashboard.executeSimulation')}
               </div>
             </button>
           </div>
@@ -231,15 +233,15 @@ const Dashboard: React.FC<DashboardProps> = ({
           {/* Water Risk Timeline */}
           <div className="dashboard-card !p-0 overflow-hidden">
             <div className="px-8 pt-8">
-              <h3 className="card-title">Water Risk Timeline</h3>
+              <h3 className="card-title">{t('dashboard.waterRiskTimeline')}</h3>
             </div>
             <div className="px-8 pb-8">
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Month</th>
-                    <th>Water Stock</th>
-                    <th className="text-right">Risk Level</th>
+                    <th>{t('dashboard.month')}</th>
+                    <th>{t('dashboard.waterStock')}</th>
+                    <th className="text-right">{t('dashboard.riskLevel')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -266,7 +268,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                           item.risk === 'Medium' ? 'status-medium' :
                           'status-high'
                         }`}>
-                          {item.risk}
+                          {item.risk === 'Low' ? t('dashboard.low') : 
+                           item.risk === 'Medium' ? t('dashboard.medium') : t('dashboard.high')}
                         </span>
                       </td>
                     </tr>
@@ -279,15 +282,15 @@ const Dashboard: React.FC<DashboardProps> = ({
           {/* Crop Recommendations */}
           <div className="dashboard-card !p-0 overflow-hidden">
             <div className="px-8 pt-8">
-              <h3 className="card-title">Crop Recommendations</h3>
+              <h3 className="card-title">{t('dashboard.cropRecommendations')}</h3>
             </div>
             <div className="px-8 pb-8">
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Crop</th>
-                    <th>Suitability</th>
-                    <th>Reason</th>
+                    <th>{t('dashboard.crop')}</th>
+                    <th>{t('dashboard.suitability')}</th>
+                    <th>{t('dashboard.reason')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -300,7 +303,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                           item.suitability === 'Medium' ? 'status-medium' :
                           'status-high'
                         }`}>
-                          {item.suitability}
+                          {item.suitability === 'High' ? t('dashboard.high') : 
+                           item.suitability === 'Medium' ? t('dashboard.medium') : t('dashboard.low')}
                         </span>
                       </td>
                       <td className="text-sm text-zinc-500 leading-relaxed">{item.reason}</td>

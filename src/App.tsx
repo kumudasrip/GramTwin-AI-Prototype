@@ -16,11 +16,11 @@ import VillageSearch from './components/VillageSearch';
 import ReportPage from './components/ReportPage';
 import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { useTranslation } from './hooks/useTranslation';
 import { 
-  fetchBaseline, 
   fetchVillageList, 
   fetchVillageBaseline, 
-  fetchLastSimulation, 
   fetchRainfallInfo,
   runSimulation, 
   BaselineData, 
@@ -29,6 +29,7 @@ import {
 } from './api/client';
 
 export default function App() {
+  const { t } = useTranslation();
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,15 +41,9 @@ export default function App() {
   useEffect(() => {
     const init = async () => {
       try {
-        const [vList, lastSim] = await Promise.all([
-          fetchVillageList(),
-          fetchLastSimulation()
-        ]);
+        const vList = await fetchVillageList();
         setVillages(vList);
-        if (lastSim) {
-          setSimulation(lastSim);
-          if (lastSim.rainfall_info) setRainfallInfo(lastSim.rainfall_info);
-        }
+        // Don't load last simulation - only show simulation when user clicks Execute Simulation button
         
         const initialBaseline = await fetchVillageBaseline('NARSING_BATLA');
         setBaseline(initialBaseline);
@@ -64,6 +59,7 @@ export default function App() {
   const handleVillageSelect = async (id: string) => {
     console.log("Village select triggered:", id);
     setSelectedVillageId(id);
+    setSimulation(null); // Clear previous simulation results when switching villages
     setLoading(true);
     try {
       const [data, rInfo] = await Promise.all([
@@ -103,7 +99,7 @@ export default function App() {
     <div className="app-container">
       {/* Header */}
       <header className="navbar">
-        <div className="logo-text">GramTwin AI</div>
+        <div className="logo-text">{t('nav.gramtwinAI')}</div>
         
         {/* Search Component */}
         <div className="flex-1 max-w-md ml-8">
@@ -123,7 +119,7 @@ export default function App() {
             }`}
           >
             <MapIcon className="w-4 h-4" />
-            Map
+            {t('nav.map')}
           </button>
           <button 
             onClick={() => setActiveTab('dashboard')}
@@ -134,7 +130,7 @@ export default function App() {
             }`}
           >
             <LayoutDashboard className="w-4 h-4" />
-            Dashboard
+            {t('nav.dashboard')}
           </button>
           <button 
             onClick={() => setActiveTab('village-map')}
@@ -145,7 +141,7 @@ export default function App() {
             }`}
           >
             <Sprout className="w-4 h-4" />
-            Soil & Crops
+            {t('nav.soilCrops')}
           </button>
           <button 
             onClick={() => setActiveTab('reports')}
@@ -156,7 +152,7 @@ export default function App() {
             }`}
           >
             <FileText className="w-4 h-4" />
-            Reports
+            {t('nav.reports')}
           </button>
           <button 
             onClick={() => setActiveTab('infrastructure')}
@@ -167,8 +163,11 @@ export default function App() {
             }`}
           >
             <Settings className="w-4 h-4" />
-            Infrastructure
+            {t('nav.infrastructure')}
           </button>
+          <div className="ml-4 pl-4 border-l border-zinc-200">
+            <LanguageSwitcher />
+          </div>
         </nav>
       </header>
 
@@ -197,7 +196,7 @@ export default function App() {
                   <div className="village-card">
                     <div className="flex items-center gap-2 mb-4 text-zinc-400">
                       <Search className="w-4 h-4" />
-                      <h3 className="text-xs font-bold uppercase tracking-widest">Select Village</h3>
+                      <h3 className="text-xs font-bold uppercase tracking-widest">{t('map.selectVillage')}</h3>
                     </div>
                     <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                       {villages.map(v => (
@@ -216,22 +215,22 @@ export default function App() {
                   {baseline && (
                     <div className="village-card flex-1 flex flex-col">
                       <div className="space-y-1 mb-6">
-                        <p className="text-[10px] font-bold text-earth-gold uppercase tracking-widest">Selected Village</p>
+                        <p className="text-[10px] font-bold text-earth-gold uppercase tracking-widest">{t('map.selectedVillage')}</p>
                         <h4 className="village-name !text-2xl !mb-2">{baseline.village_name}</h4>
                         <p className="text-sm text-zinc-500">{baseline.district}, {baseline.state}</p>
                       </div>
                       
                       <div className="space-y-4 mb-8">
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-zinc-400">Population</span>
+                          <span className="text-zinc-400">{t('map.population')}</span>
                           <span className="font-bold text-earth-primary">{baseline.population.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-zinc-400">Main Crop</span>
+                          <span className="text-zinc-400">{t('map.mainCrop')}</span>
                           <span className="font-bold text-earth-primary">{baseline.main_crop}</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-zinc-400">Water Level</span>
+                          <span className="text-zinc-400">{t('map.waterLevel')}</span>
                           <span className="font-bold text-earth-primary">{baseline.groundwater_level}m</span>
                         </div>
                       </div>
@@ -241,7 +240,7 @@ export default function App() {
                           onClick={() => setActiveTab('dashboard')}
                           className="primary-btn"
                         >
-                          View Analytics
+                          {t('map.viewAnalytics')}
                         </button>
                       </div>
                     </div>
@@ -298,13 +297,13 @@ export default function App() {
 
       {/* Footer */}
       <footer className="px-8 py-6 border-t border-zinc-200 mt-auto flex justify-between items-center bg-white/50 backdrop-blur-sm">
-        <p className="text-xs text-zinc-500 font-medium">© 2026 GramTwin AI. Empowering Rural India.</p>
+        <p className="text-xs text-zinc-500 font-medium">{t('footer.copyright')}</p>
         <div className="flex items-center gap-6 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-          <span>Water Security</span>
+          <span>{t('footer.waterSecurity')}</span>
           <span className="w-1 h-1 bg-zinc-300 rounded-full" />
-          <span>Climate Adaptation</span>
+          <span>{t('footer.climateAdaptation')}</span>
           <span className="w-1 h-1 bg-zinc-300 rounded-full" />
-          <span>Rural Development</span>
+          <span>{t('footer.ruralDevelopment')}</span>
         </div>
       </footer>
     </div>

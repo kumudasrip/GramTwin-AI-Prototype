@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Info, Bell, AlertCircle, CheckCircle } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface AlertsProps {
   alerts: string[];
@@ -54,13 +55,15 @@ const getAlertStyles = (type: 'warning' | 'info' | 'success') => {
 };
 
 const Alerts: React.FC<AlertsProps> = ({ alerts }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="dashboard-card h-full">
       <div className="flex items-center gap-4 mb-8">
         <AlertTriangle className="w-10 h-10 text-earth-accent" />
         <div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-earth-primary">Citizen Alerts</h2>
-          <p className="text-xs text-zinc-500 mt-1">{alerts.length} active alert{alerts.length !== 1 ? 's' : ''}</p>
+          <h2 className="text-3xl font-extrabold tracking-tight text-earth-primary">{t('alerts.title')}</h2>
+          <p className="text-xs text-zinc-500 mt-1">{alerts.length} {t('alerts.alertCount')}{alerts.length !== 1 ? 's' : ''}</p>
         </div>
       </div>
       
@@ -88,7 +91,7 @@ const Alerts: React.FC<AlertsProps> = ({ alerts }) => {
         ) : (
           <div className="flex flex-col items-center justify-center py-20 opacity-30">
             <Bell className="w-20 h-20 mb-6 text-zinc-400" />
-            <p className="text-zinc-500 italic text-xl">No alerts at this time.</p>
+            <p className="text-zinc-500 italic text-xl">{t('alerts.noAlerts')}</p>
           </div>
         )}
       </div>

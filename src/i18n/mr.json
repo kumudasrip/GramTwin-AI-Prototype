@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "लोड होत आहे...",
+    "processing": "प्रक्रिया चल रही आहे...",
+    "error": "एक त्रुटी घडली",
+    "success": "यश",
+    "search": "शोध",
+    "select": "निवडा"
+  },
+  "nav": {
+    "map": "नकाशा",
+    "dashboard": "डॅशबोर्ड",
+    "soilCrops": "माती आणि पिके",
+    "reports": "अहवाल",
+    "infrastructure": "पायाभूत सुविधा",
+    "gramtwinAI": "ग्राम ट्विन AI"
+  },
+  "map": {
+    "selectVillage": "गाव निवडा",
+    "selectedVillage": "निवडलेले गाव",
+    "population": "लोकसंख्या",
+    "mainCrop": "मुख्य पीक",
+    "waterLevel": "जल स्तर",
+    "viewAnalytics": "विश्लेषण पहा"
+  },
+  "dashboard": {
+    "selectVillage": "गाव निवडा",
+    "dataSource": "डेटा स्रोत",
+    "censusIMD": "जनगणना आणि IMD ऐतिहासिक डेटा",
+    "simulationScenarios": "सिम्युलेशन परिस्थिती",
+    "historicalRainfall": "ऐतिहासिक पावसाळ (गेल्या 12 महिन्यांत)",
+    "rainfallForecast": "पावसाळ अंदाज",
+    "population": "लोकसंख्या",
+    "mainCrop": "मुख्य पीक",
+    "groundwater": "भूजल",
+    "live": "लाइव",
+    "waterRiskTimeline": "जल धोका कालरेषा",
+    "cropRecommendations": "पिकांच्या शिफारशी",
+    "month": "महिना",
+    "waterStock": "जल साठा",
+    "riskLevel": "धोका पातळी",
+    "crop": "पीक",
+    "suitability": "योग्यता",
+    "reason": "कारण",
+    "executeSimulation": "सिम्युलेशन चलवा",
+    "processingSimulation": "सिम्युलेशन प्रक्रिया चल रही...",
+    "intelligence": "बुद्धिमत्ता",
+    "description": "भारतीय ग्रामीण भागांसाठी गाव-स्तरीय डिजिटल ट्विन. जनगणना + IMD डेटा वापरून पाणी, पिके, कचरा आणि हवामान जोखीम चे अनुकरण करते जेणे करून ग्राम पंचायत सक्रिय निर्णय घेऊ शकतात.",
+    "below_normal": "सामान्यपेक्षा खाली",
+    "normal": "सामान्य",
+    "above_normal": "सामान्यपेक्षा वर",
+    "excellent": "उत्कृष्ट",
+    "good": "चांगला",
+    "moderate": "मध्यम",
+    "stressed": "तणावग्रस्त",
+    "critical": "गंभीर",
+    "district": "जिल्हा",
+    "state": "राज्य",
+    "low": "कमी",
+    "medium": "मध्यम",
+    "high": "उच्च",
+    "loadingVillageProfile": "गावाची प्रोफाईल लोड होत आहे..."
+  },
+  "footer": {
+    "copyright": "© 2026 ग्राम ट्विन AI. ग्रामीण भारताला सशक्त बनवा.",
+    "waterSecurity": "जल सुरक्षा",
+    "climateAdaptation": "हवामान अनुकूलन",
+    "ruralDevelopment": "ग्रामीण विकास"
+  },
+  "alerts": {
+    "title": "सतर्कता",
+    "noAlerts": "कोई सतर्कता नहीं"
+  },
+  "infrastructure": {
+    "title": "पायाभूत सुविधा शिफारशी"
+  },
+  "reports": {
+    "title": "अहवाल"
+  },
+  "enhancedVillageMap": {
+    "title": "गावाचा नकाशा"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "ஏற்றப்படுகிறது...",
+    "processing": "செயல்பாட்டுக்குள் உள்ளது...",
+    "error": "ஒரு பிழை ஏற்பட்டுள்ளது",
+    "success": "வெற்றி",
+    "search": "தேடு",
+    "select": "தேர்ந்தெடு"
+  },
+  "nav": {
+    "map": "வரைபடம்",
+    "dashboard": "டாஷ்போர்ட்",
+    "soilCrops": "மண் மற்றும் பயிர்கள்",
+    "reports": "அறிக்கைகள்",
+    "infrastructure": "உள்ளடக்கமாதல் வசதி",
+    "gramtwinAI": "கிராம் ட்வின் AI"
+  },
+  "map": {
+    "selectVillage": "கிராமத்தைத் தேர்ந்தெடு",
+    "selectedVillage": "தேர்ந்தெடுக்கப்பட்ட கிராமம்",
+    "population": "மக்கள்தொகை",
+    "mainCrop": "முக்கிய பயிர்",
+    "waterLevel": "நீர் மட்டம்",
+    "viewAnalytics": "பகுப்பாய்வு பார்க்கவும்"
+  },
+  "dashboard": {
+    "selectVillage": "கிராமத்தைத் தேர்ந்தெடு",
+    "dataSource": "தரவு மூலம்",
+    "censusIMD": "மக்கள்தொகை மற்றும் IMD வரலாற்று தரவு",
+    "simulationScenarios": "உருவகப்படுத்தல் காட்சிகள்",
+    "historicalRainfall": "வரலாற்று மழைப்பொழிவு (கடந்த 12 மாதங்கள்)",
+    "rainfallForecast": "மழை முன்னறிவிப்பு",
+    "population": "மக்கள்தொகை",
+    "mainCrop": "முக்கிய பயிர்",
+    "groundwater": "ভৌমজল",
+    "live": "நேரடி",
+    "waterRiskTimeline": "நீர் ஆபத்து காலக்கணன்",
+    "cropRecommendations": "பயிர் பரிந்துரைகள்",
+    "month": "மாதம்",
+    "waterStock": "நீர் запас",
+    "riskLevel": "ஆபத்து நிலை",
+    "crop": "பயிர்",
+    "suitability": "பொருத்தம்",
+    "reason": "காரணம்",
+    "executeSimulation": "உருவகப்படுத்தலை இயக்கு",
+    "processingSimulation": "உருவகப்படுத்தல் செயல்பாட்டுக்குள்...",
+    "intelligence": "புத்திசாலி",
+    "description": "இந்தியாவின் கிராமவாசி பகுதிகளுக்கான கிராம-அளவிய டிஜிটல் இரட்டை. மக்கள்தொகை + IMD தரவைப் பயன்படுத்தி நீர், பயிர்கள், கழிவுகள் மற்றும் காலநிலை ஆபத்துகளைப் பிரதিபலிக்கிறது, இதன் மூலம் ग्राम பंचாயத்துகள் செயல்திறமாக முடிவெடுக்க உதவுகிறது.",
+    "below_normal": "சாதாரணத்திற்கு கீழ்",
+    "normal": "சாதாரணம்",
+    "above_normal": "சாதாரணத்திற்கு மேல்",
+    "excellent": "சிறப்பான",
+    "good": "நல்ல",
+    "moderate": "மிதமாக",
+    "stressed": "மன அழுத்தம்",
+    "critical": "நோயுற்ற",
+    "district": "மாவட்டம்",
+    "state": "மாநிலம்",
+    "low": "குறைந்த",
+    "medium": "நடுத்தர",
+    "high": "உயர்",
+    "loadingVillageProfile": "கிராம சுயவிவரம் ஏற்றப்படுகிறது..."
+  },
+  "footer": {
+    "copyright": "© 2026 கிராம ட்வின் AI. கிராமவாசি இந்தியாவை ஆற்றல்மிக்க வைக்கிறது.",
+    "waterSecurity": "நீர் பாதுகாப்பு",
+    "climateAdaptation": "காலநிலை மানemil்கூட்டம்",
+    "ruralDevelopment": "கிராமீண வளர்ச்சி"
+  },
+  "alerts": {
+    "title": "எச்சரிக்கைகள்",
+    "noAlerts": "எந்த எச்சரிக்கைகளும் இல்லை"
+  },
+  "infrastructure": {
+    "title": "அடிப்படை வசதி பரிந்துரைகள்"
+  },
+  "reports": {
+    "title": "அறிக்கைகள்"
+  },
+  "enhancedVillageMap": {
+    "title": "கிராம வரைபடம்"
+  }
+}
