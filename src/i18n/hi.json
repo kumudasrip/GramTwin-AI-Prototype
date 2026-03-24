@@ -203,5 +203,27 @@
     "networkError": "नेटवर्क त्रुटि",
     "validationError": "सत्यापन त्रुटि",
     "unknown": "अज्ञात त्रुटि"
+  },
+  "login": {
+    "gramtwinAI": "ग्राम ट्विन AI",
+    "subtitle": "सुरक्षित पहुंच पोर्टल",
+    "organizationType": "संगठन का प्रकार",
+    "placeName": "स्थान का नाम",
+    "placeNamePlaceholder": "गांव, जिला, या क्षेत्र का नाम दर्ज करें",
+    "placeNameHelp": "अपने गांव, जिला, या प्रशासनिक क्षेत्र का नाम दर्ज करें",
+    "verificationCode": "सत्यापन कोड",
+    "verificationCodePlaceholder": "अपना 6+ वर्णों का कोड दर्ज करें",
+    "verificationCodeHelp": "आपके प्रशासक द्वारा प्रदान किए गए अल्फान्यूमेरिक सत्यापन कोड को दर्ज करें (न्यूनतम 6 वर्ण)",
+    "login": "लॉगिन करें",
+    "verifying": "सत्यापन कर रहे हैं...",
+    "orgTypeRequired": "कृपया संगठन का प्रकार चुनें",
+    "placeNameRequired": "कृपया स्थान का नाम दर्ज करें",
+    "verificationCodeRequired": "कृपया सत्यापन कोड दर्ज करें",
+    "verificationCodeLength": "सत्यापन कोड कम से कम 6 वर्णों का होना चाहिए",
+    "verificationCodeInvalid": "सत्यापन कोड में केवल अक्षर और संख्याएं होनी चाहिए",
+    "verificationSuccess": "सत्यापन सफल! रीडायरेक्ट हो रहे हैं...",
+    "securityNote": "सुरक्षा नोटिस",
+    "securityMessage": "यह प्लेटफॉर्म अनधिकृत पहुंच से सुरक्षित है। केवल वैध सत्यापन कोड वाले अधिकृत प्रतिनिधि ही गांव के डेटा तक पहुंच सकते हैं।",
+    "securePlatform": "सुरक्षित प्रौद्योगिकी के साथ ग्रामीण भारत को सशक्त बनाना"
   }
 }

@@ -8,7 +8,8 @@ import {
   ChevronRight,
   Search,
   FileText,
-  Settings
+  Settings,
+  LogOut
 } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import MapComponent from './components/MapComponent';
@@ -16,6 +17,7 @@ import VillageSearch from './components/VillageSearch';
 import ReportPage from './components/ReportPage';
 import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
+import Login from './components/Login';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { useTranslation } from './hooks/useTranslation';
 import { 
@@ -27,9 +29,12 @@ import {
   SimulationResult, 
   VillageListItem 
 } from './api/client';
+import { isAuthenticated, clearSession, getUserInfo, verifyCode, createSession, saveSession } from './utils/auth';
 
 export default function App() {
   const { t } = useTranslation();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isAuthenticated());
+  const [authLoading, setAuthLoading] = useState(false);
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -38,7 +43,40 @@ export default function App() {
   const [selectedVillageId, setSelectedVillageId] = useState<string>('NARSING_BATLA');
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
 
+  // Handle login
+  const handleLogin = async (organizationType: string, placeName: string, verificationCode: string) => {
+    setAuthLoading(true);
+    try {
+      // Verify the code against backend
+      const isValid = await verifyCode(organizationType, placeName, verificationCode);
+      if (!isValid) {
+        throw new Error('Invalid verification code');
+      }
+
+      // Create and save session
+      const session = createSession(organizationType, placeName);
+      saveSession(session);
+      setIsLoggedIn(true);
+    } catch (err) {
+      console.error('Login failed:', err);
+      throw err;
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    clearSession();
+    setIsLoggedIn(false);
+    setBaseline(null);
+    setSimulation(null);
+    setActiveTab('map');
+  };
+
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     const init = async () => {
       try {
         const vList = await fetchVillageList();
@@ -54,7 +92,7 @@ export default function App() {
       }
     };
     init();
-  }, []);
+  }, [isLoggedIn]);
 
   const handleVillageSelect = async (id: string) => {
     console.log("Village select triggered:", id);
@@ -94,6 +132,18 @@ export default function App() {
   };
 
   const latestRisk = simulation?.timeline[simulation.timeline.length - 1]?.risk;
+
+  // Show login page if not authenticated
+  if (!isLoggedIn) {
+    return (
+      <Login 
+        onLogin={handleLogin}
+        loading={authLoading}
+      />
+    );
+  }
+
+  const userInfo = getUserInfo();
 
   return (
     <div className="app-container">
@@ -165,8 +215,20 @@ export default function App() {
             <Settings className="w-4 h-4" />
             {t('nav.infrastructure')}
           </button>
-          <div className="ml-4 pl-4 border-l border-zinc-200">
+          <div className="ml-4 pl-4 border-l border-zinc-200 flex items-center gap-3">
             <LanguageSwitcher />
+            {userInfo && (
+              <div className="flex items-center gap-2 text-xs text-zinc-600 font-medium">
+                <span>{userInfo.placeName}</span>
+                <button 
+                  onClick={handleLogout}
+                  className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-red-600"
+                  title="Logout"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
         </nav>
       </header>

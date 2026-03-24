@@ -204,5 +204,27 @@
     "networkError": "Network error",
     "validationError": "Validation error",
     "unknown": "Unknown error"
+  },
+  "login": {
+    "gramtwinAI": "GramTwin AI",
+    "subtitle": "Secure Access Portal",
+    "organizationType": "Organization Type",
+    "placeName": "Place Name",
+    "placeNamePlaceholder": "Enter village, district, or region name",
+    "placeNameHelp": "Enter the name of your village, district, or administrative region",
+    "verificationCode": "Verification Code",
+    "verificationCodePlaceholder": "Enter your 6+ character code",
+    "verificationCodeHelp": "Enter the alphanumeric verification code provided by your administrator (minimum 6 characters)",
+    "login": "Login",
+    "verifying": "Verifying...",
+    "orgTypeRequired": "Please select an organization type",
+    "placeNameRequired": "Please enter a place name",
+    "verificationCodeRequired": "Please enter a verification code",
+    "verificationCodeLength": "Verification code must be at least 6 characters",
+    "verificationCodeInvalid": "Verification code must contain only letters and numbers",
+    "verificationSuccess": "Verification successful! Redirecting...",
+    "securityNote": "Security Notice",
+    "securityMessage": "This platform is protected against unauthorized access. Only authorized representatives with valid verification codes can access village data.",
+    "securePlatform": "Empowering Rural India with Secure Technology"
   }
 }
