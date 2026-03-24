@@ -260,5 +260,18 @@
     "open": "Open",
     "answered": "Answered",
     "viewResponse": "View Response"
+  },
+  "citizenQueries": {
+    "title": "Citizen Queries",
+    "description": "View and manage queries posted by citizens from your village",
+    "searchPlaceholder": "Search by query ID or text...",
+    "allCategories": "All Categories",
+    "allStatuses": "All Statuses",
+    "queriesCount": "Total queries",
+    "markAnswered": "Mark as Answered",
+    "markOpen": "Mark as Open",
+    "noQueries": "No queries to display",
+    "noQueriesDescription": "There are no citizen queries for this village yet. Citizens will be able to post queries that will appear here.",
+    "askQuestion": "Ask a Question"
   }
 }

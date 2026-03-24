@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Send, AlertCircle, CheckCircle } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
+
+export interface CitizenQuery {
+  id: string;
+  text: string;
+  category: string;
+  timestamp: string;
+  status: 'submitted' | 'answered';
+  villageId: string;
+  citizenId: string;
+}
 
 interface PostQueryProps {
   selectedVillageId: string;
@@ -14,13 +24,21 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [submittedQueries, setSubmittedQueries] = useState<Array<{
-    id: string;
-    text: string;
-    category: string;
-    timestamp: string;
-    status: 'submitted' | 'answered';
-  }>>([]);
+  const [submittedQueries, setSubmittedQueries] = useState<CitizenQuery[]>([]);
+
+  // Load queries from localStorage on mount
+  useEffect(() => {
+    const savedQueries = localStorage.getItem('citizen_queries');
+    if (savedQueries) {
+      try {
+        const allQueries = JSON.parse(savedQueries);
+        // Filter queries for current citizen (or show all for demo)
+        setSubmittedQueries(allQueries);
+      } catch (err) {
+        console.error('Failed to load queries', err);
+      }
+    }
+  }, []);
 
   const categories = [
     { value: 'general', label: 'General Inquiry' },
@@ -51,16 +69,31 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
       // Simulate API call to submit query
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Add query to list
-      const newQuery = {
+      // Create new query
+      const newQuery: CitizenQuery = {
         id: `query_${Date.now()}`,
         text: queryText,
         category: category,
         timestamp: new Date().toLocaleString(),
         status: 'submitted' as const,
+        villageId: selectedVillageId,
+        citizenId: `citizen_${Math.random().toString(36).substr(2, 9)}`, // Demo citizen ID
       };
 
-      setSubmittedQueries([newQuery, ...submittedQueries]);
+      // Save to localStorage
+      const savedQueries = localStorage.getItem('citizen_queries');
+      let allQueries: CitizenQuery[] = [];
+      if (savedQueries) {
+        try {
+          allQueries = JSON.parse(savedQueries);
+        } catch (err) {
+          console.error('Failed to parse saved queries', err);
+        }
+      }
+      allQueries.unshift(newQuery);
+      localStorage.setItem('citizen_queries', JSON.stringify(allQueries));
+
+      setSubmittedQueries(allQueries);
       setSuccess(true);
       setQueryText('');
 
