@@ -9,7 +9,8 @@ import {
   Search,
   FileText,
   Settings,
-  LogOut
+  LogOut,
+  MessageSquare
 } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import MapComponent from './components/MapComponent';
@@ -17,6 +18,7 @@ import VillageSearch from './components/VillageSearch';
 import ReportPage from './components/ReportPage';
 import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
+import PostQuery from './components/PostQuery';
 import NewLoginPage from './components/NewLoginPage';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { useTranslation } from './hooks/useTranslation';
@@ -33,11 +35,11 @@ import {
 
 function AppContent() {
   const { t } = useTranslation();
-  const { isAuthenticated, login, loginAsCitizen, logout } = useAuth();
+  const { isAuthenticated, user, login, loginAsCitizen, logout } = useAuth();
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'infrastructure'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'post-query' | 'infrastructure'>('map');
   const [villages, setVillages] = useState<VillageListItem[]>([]);
   const [selectedVillageId, setSelectedVillageId] = useState<string>('NARSING_BATLA');
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
@@ -175,17 +177,32 @@ function AppContent() {
             <Sprout className="w-4 h-4" />
             {t('nav.soilCrops')}
           </button>
-          <button 
-            onClick={() => setActiveTab('reports')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
-              activeTab === 'reports' 
-                ? 'bg-earth-primary text-white shadow-lg' 
-                : 'text-zinc-500 hover:bg-zinc-100'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            {t('nav.reports')}
-          </button>
+          {user?.role === 'org' && (
+            <button 
+              onClick={() => setActiveTab('reports')}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+                activeTab === 'reports' 
+                  ? 'bg-earth-primary text-white shadow-lg' 
+                  : 'text-zinc-500 hover:bg-zinc-100'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              {t('nav.reports')}
+            </button>
+          )}
+          {user?.role === 'citizen' && (
+            <button 
+              onClick={() => setActiveTab('post-query')}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+                activeTab === 'post-query' 
+                  ? 'bg-earth-primary text-white shadow-lg' 
+                  : 'text-zinc-500 hover:bg-zinc-100'
+              }`}
+            >
+              <MessageSquare className="w-4 h-4" />
+              {t('postQuery.postQuery')}
+            </button>
+          )}
           <button 
             onClick={() => setActiveTab('infrastructure')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
@@ -317,6 +334,14 @@ function AppContent() {
                 <ReportPage 
                   selectedVillageId={selectedVillageId}
                   baseline={baseline}
+                />
+              </div>
+            )}
+
+            {activeTab === 'post-query' && (
+              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+                <PostQuery 
+                  selectedVillageId={selectedVillageId}
                 />
               </div>
             )}
