@@ -3,18 +3,8 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "well_id": "W1", "groundwater_level": 20.0, "status": "Good" },
-      "geometry": { "type": "Point", "coordinates": [79.582, 18.085] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "well_id": "W2", "groundwater_level": 15.5, "status": "Semi-Critical" },
-      "geometry": { "type": "Point", "coordinates": [79.59, 18.09] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "well_id": "W3", "groundwater_level": 24.0, "status": "Good" },
-      "geometry": { "type": "Point", "coordinates": [79.585, 18.088] }
+      "properties": { "well_id": "W1", "groundwater_level": 15.0, "status": "Dry" },
+      "geometry": { "type": "Point", "coordinates": [79.098, 13.208] }
     }
   ]
 }

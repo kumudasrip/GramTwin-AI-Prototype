@@ -23,30 +23,6 @@ export const villages: Record<string, VillageBaseline> = {
     groundwater_level_initial: 12.5,
     district: "Nizamabad",
     state: "Andhra Pradesh"
-  },
-  "TANDUR_VILLAGE": {
-    id: "TANDUR_VILLAGE",
-    name: "Tandur",
-    population: 3850,
-    households: 920,
-    livestock: 180,
-    main_crop: "Millet",
-    groundwater_level: "Critical",
-    groundwater_level_initial: 15.8,
-    district: "Rangareddy",
-    state: "Telangana"
-  },
-  "WARANGAL_RURAL": {
-    id: "WARANGAL_RURAL",
-    name: "Warangal Rural",
-    population: 5120,
-    households: 1280,
-    livestock: 320,
-    main_crop: "Paddy",
-    groundwater_level: "Semi-Critical",
-    groundwater_level_initial: 11.2,
-    district: "Warangal",
-    state: "Telangana"
   }
 };
 

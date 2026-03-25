@@ -3,18 +3,8 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "field_id": "F1", "crop_type": "Millet", "area_hectares": 3.2 },
-      "geometry": { "type": "Polygon", "coordinates": [[[77.28, 17.32], [77.285, 17.32], [77.285, 17.325], [77.28, 17.325], [77.28, 17.32]]] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "field_id": "F2", "crop_type": "Groundnuts", "area_hectares": 2.1 },
-      "geometry": { "type": "Polygon", "coordinates": [[[77.287, 17.327], [77.292, 17.327], [77.292, 17.332], [77.287, 17.332], [77.287, 17.327]]] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "field_id": "F3", "crop_type": "Millet", "area_hectares": 1.9 },
-      "geometry": { "type": "Polygon", "coordinates": [[[77.294, 17.33], [77.299, 17.33], [77.299, 17.335], [77.294, 17.335], [77.294, 17.33]]] }
+      "properties": { "field_id": "F1", "crop_type": "Millets", "area_hectares": 3.2 },
+      "geometry": { "type": "Polygon", "coordinates": [[[79.435, 18.755], [79.44, 18.755], [79.44, 18.76], [79.435, 18.76], [79.435, 18.755]]] }
     }
   ]
 }
