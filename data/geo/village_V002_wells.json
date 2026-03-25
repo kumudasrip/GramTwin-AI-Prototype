@@ -3,8 +3,13 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "well_id": "W1", "groundwater_level": 30.0, "status": "Good" },
-      "geometry": { "type": "Point", "coordinates": [79.438, 18.758] }
+      "properties": { "well_id": "W1", "groundwater_level": 18.5, "status": "Stressed" },
+      "geometry": { "type": "Point", "coordinates": [77.285, 17.325] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "well_id": "W2", "groundwater_level": 22.0, "status": "Stressed" },
+      "geometry": { "type": "Point", "coordinates": [77.29, 17.33] }
     }
   ]
 }

@@ -3,8 +3,13 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "field_id": "F1", "crop_type": "Pulses", "area_hectares": 4.5 },
-      "geometry": { "type": "Polygon", "coordinates": [[[79.095, 13.205], [79.10, 13.205], [79.10, 13.21], [79.095, 13.21], [79.095, 13.205]]] }
+      "properties": { "field_id": "F1", "crop_type": "Paddy", "area_hectares": 4.5 },
+      "geometry": { "type": "Polygon", "coordinates": [[[79.58, 18.08], [79.585, 18.08], [79.585, 18.085], [79.58, 18.085], [79.58, 18.08]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "field_id": "F2", "crop_type": "Sugarcane", "area_hectares": 2.8 },
+      "geometry": { "type": "Polygon", "coordinates": [[[79.587, 18.087], [79.592, 18.087], [79.592, 18.092], [79.587, 18.092], [79.587, 18.087]]] }
     }
   ]
 }
