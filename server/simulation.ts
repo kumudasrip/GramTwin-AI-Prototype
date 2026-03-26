@@ -43,6 +43,12 @@ function generateRecommendations(
 
   // Generate crop recommendations based on risk and rainfall
   const crops = ["Paddy", "Millets", "Pulses"];
+  const cropMarketValues: Record<string, string> = {
+    "Paddy": "₹2,000-2,500 per quintal",
+    "Millets": "₹3,500-4,000 per quintal",
+    "Pulses": "₹4,000-5,500 per quintal"
+  };
+
   for (const crop of crops) {
     let suitability: "Low" | "Medium" | "High" = "Medium";
     let reason = "";
@@ -63,7 +69,12 @@ function generateRecommendations(
       reason = "Moderate water need, good for soil health.";
     }
 
-    crop_recs.push({ crop, suitability, reason });
+    crop_recs.push({ 
+      crop, 
+      suitability, 
+      reason,
+      market_value: cropMarketValues[crop]
+    });
   }
 
   return { crop_recs, alerts };

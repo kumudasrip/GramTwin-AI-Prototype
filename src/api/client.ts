@@ -20,6 +20,7 @@ export interface CropRecommendation {
   crop: string;
   suitability: string;
   reason: string;
+  market_value?: string;
 }
 
 export interface SimulationResult {

@@ -16,6 +16,7 @@ export interface CropRecommendation {
   crop: string;
   suitability: "Low" | "Medium" | "High";
   reason: string;
+  market_value?: string;
 }
 
 export interface SimulationResult {

@@ -11,7 +11,8 @@ import {
   Settings,
   LogOut,
   MessageSquare,
-  MessageCircle
+  MessageCircle,
+  Users
 } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import MapComponent from './components/MapComponent';
@@ -21,6 +22,7 @@ import EnhancedVillageMap from './components/EnhancedVillageMap';
 import InfrastructureRecommendations from './components/InfrastructureRecommendations';
 import PostQuery from './components/PostQuery';
 import CitizenQueries from './components/CitizenQueries';
+import FarmerCropPlanning from './components/FarmerCropPlanning';
 import NewLoginPage from './components/NewLoginPage';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { useTranslation } from './hooks/useTranslation';
@@ -41,7 +43,7 @@ function AppContent() {
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'post-query' | 'citizen-queries' | 'infrastructure'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'post-query' | 'citizen-queries' | 'infrastructure' | 'farmer-planning'>('map');
   const [villages, setVillages] = useState<VillageListItem[]>([]);
   const [selectedVillageId, setSelectedVillageId] = useState<string>('NARSING_BATLA');
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
@@ -229,6 +231,17 @@ function AppContent() {
             <Settings className="w-4 h-4" />
             {t('nav.infrastructure')}
           </button>
+          <button 
+            onClick={() => setActiveTab('farmer-planning')}
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              activeTab === 'farmer-planning' 
+                ? 'bg-earth-primary text-white shadow-lg' 
+                : 'text-zinc-500 hover:bg-zinc-100'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            Farmer Planning
+          </button>
           <div className="ml-4 pl-4 border-l border-zinc-200 flex items-center gap-3">
             <LanguageSwitcher />
             <button 
@@ -374,6 +387,14 @@ function AppContent() {
                 <InfrastructureRecommendations 
                   selectedVillageId={selectedVillageId}
                   baseline={baseline}
+                />
+              </div>
+            )}
+
+            {activeTab === 'farmer-planning' && (
+              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+                <FarmerCropPlanning 
+                  villageId={selectedVillageId}
                 />
               </div>
             )}

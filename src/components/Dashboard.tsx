@@ -290,6 +290,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <tr>
                     <th>{t('dashboard.crop')}</th>
                     <th>{t('dashboard.suitability')}</th>
+                    <th>Market Value</th>
                     <th>{t('dashboard.reason')}</th>
                   </tr>
                 </thead>
@@ -307,6 +308,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                            item.suitability === 'Medium' ? t('dashboard.medium') : t('dashboard.low')}
                         </span>
                       </td>
+                      <td className="font-semibold text-earth-primary">{item.market_value || 'N/A'}</td>
                       <td className="text-sm text-zinc-500 leading-relaxed">{item.reason}</td>
                     </tr>
                   ))}
