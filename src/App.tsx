@@ -12,7 +12,8 @@ import {
   LogOut,
   MessageSquare,
   MessageCircle,
-  Users
+  Users,
+  Award
 } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import MapComponent from './components/MapComponent';
@@ -23,6 +24,7 @@ import InfrastructureRecommendations from './components/InfrastructureRecommenda
 import PostQuery from './components/PostQuery';
 import CitizenQueries from './components/CitizenQueries';
 import FarmerCropPlanning from './components/FarmerCropPlanning';
+import GovernmentSchemes from './components/GovernmentSchemes';
 import NewLoginPage from './components/NewLoginPage';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { useTranslation } from './hooks/useTranslation';
@@ -43,9 +45,14 @@ function AppContent() {
   const [baseline, setBaseline] = useState<BaselineData | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'post-query' | 'citizen-queries' | 'infrastructure' | 'farmer-planning'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'dashboard' | 'village-map' | 'reports' | 'post-query' | 'citizen-queries' | 'infrastructure' | 'farmer-planning' | 'government-schemes'>('map');
   const [villages, setVillages] = useState<VillageListItem[]>([]);
   const [selectedVillageId, setSelectedVillageId] = useState<string>('NARSING_BATLA');
+  const [formData, setFormData] = useState({
+    population: 4500,
+    rainfall_forecast: 'Below normal',
+    current_crop: 'Paddy'
+  });
   const [rainfallInfo, setRainfallInfo] = useState<{ avg_rainfall_mm: number; rainfall_category: string } | null>(null);
 
   // Handle new login flows
@@ -242,6 +249,17 @@ function AppContent() {
             <Users className="w-4 h-4" />
             Farmer Planning
           </button>
+          <button 
+            onClick={() => setActiveTab('government-schemes')}
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              activeTab === 'government-schemes' 
+                ? 'bg-earth-primary text-white shadow-lg' 
+                : 'text-zinc-500 hover:bg-zinc-100'
+            }`}
+          >
+            <Award className="w-4 h-4" />
+            Schemes
+          </button>
           <div className="ml-4 pl-4 border-l border-zinc-200 flex items-center gap-3">
             <LanguageSwitcher />
             <button 
@@ -353,6 +371,8 @@ function AppContent() {
                   onVillageSelect={handleVillageSelect}
                   selectedVillageId={selectedVillageId}
                   rainfallInfo={rainfallInfo}
+                  formData={formData}
+                  setFormData={setFormData}
                 />
               </div>
             )}
@@ -395,6 +415,15 @@ function AppContent() {
               <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
                 <FarmerCropPlanning 
                   villageId={selectedVillageId}
+                />
+              </div>
+            )}
+
+            {activeTab === 'government-schemes' && (
+              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+                <GovernmentSchemes 
+                  selectedVillageId={selectedVillageId}
+                  currentCrop={formData.current_crop}
                 />
               </div>
             )}

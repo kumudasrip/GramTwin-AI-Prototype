@@ -13,6 +13,7 @@ import {
   getInfrastructureRecommendations,
   generateInfrastructureRecommendations
 } from "./server/data/village_metadata.ts";
+import { recommendSchemesForVillage, VillageState } from "./server/data/schemes_loader.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -420,6 +421,147 @@ async function startServer() {
     };
 
     res.json(terrainAnalysis);
+  });
+
+  // ===== Government Schemes Endpoints =====
+  
+  // Get recommended schemes for a village
+  app.get("/api/village/:id/schemes", (req, res) => {
+    const villageId = req.params.id;
+    const currentCrop = req.query.crop as string | undefined;
+    const villages = loadVillageList();
+    const village = villages.find(v => v.village_id === villageId);
+    
+    if (!village) {
+      return res.status(404).json({ error: `Village ${villageId} not found` });
+    }
+
+    // Construct village state from available data
+    const villageState: VillageState = {
+      population: village.population || 0,
+      households: village.households || 0,
+      groundwater_index: village.groundwater_level_initial 
+        ? Math.max(0, 1 - (Math.max(0, village.groundwater_level_initial - 5) / 30))
+        : 0.5,
+      water_risk: village.groundwater_level_initial && village.groundwater_level_initial < 10 
+        ? "High" 
+        : village.groundwater_level_initial && village.groundwater_level_initial < 20 
+        ? "Medium" 
+        : "Low",
+      flood_prone: false, // Would come from detailed metadata
+      main_crops: village.main_crop ? [village.main_crop] : [],
+      income_level_approx: "Low", // Would come from detailed metadata
+      existing_infra: []
+    };
+
+    try {
+      const recommendations = recommendSchemesForVillage(villageId, villageState, currentCrop);
+      
+      // Check if there's a BASE version (user-provided dataset)
+      const baseRecommendations = recommendSchemesForVillage(`${villageId}_BASE`, villageState, currentCrop);
+      
+      let response: any = {
+        villageId,
+        villageName: village.village_name,
+        villageState,
+        recommendations,
+        totalSchemes: recommendations.length,
+        generatedAt: new Date().toISOString()
+      };
+
+      // Add separate datasets if both exist
+      if (baseRecommendations.length > 0 && recommendations.length > 0) {
+        response = {
+          villageId,
+          villageName: village.village_name,
+          villageState,
+          datasets: {
+            provided_dataset: {
+              name: "User-Provided Dataset",
+              description: "Schemes from the user-provided JSON file",
+              source: "user_dataset",
+              schemes: baseRecommendations,
+              totalSchemes: baseRecommendations.length,
+              totalRecommended: baseRecommendations.filter(s => s.priority === "High" || s.priority === "Medium").length
+            },
+            extended_dataset: {
+              name: "Extended Dataset",
+              description: "Enhanced scheme list with additional programs",
+              source: "extended_dataset",
+              schemes: recommendations,
+              totalSchemes: recommendations.length,
+              totalRecommended: recommendations.filter(s => s.priority === "High" || s.priority === "Medium").length
+            }
+          },
+          generatedAt: new Date().toISOString()
+        };
+      } else if (recommendations.length === 0) {
+        return res.status(404).json({ 
+          error: `No schemes found for village ${villageId}`,
+          available_villages: ["NARSING_BATLA", "NARSING_BATLA_BASE", "DAMERACHERLA", "V001", "V002", "V003"]
+        });
+      }
+
+      res.json(response);
+    } catch (error) {
+      console.error(`Error getting schemes for ${villageId}:`, error);
+      res.status(500).json({ error: "Failed to compute recommendations" });
+    }
+  });
+
+  // Get schemes by dataset type (user_dataset or extended_dataset)
+  app.get("/api/village/:id/schemes/:dataset", (req, res) => {
+    const villageId = req.params.id;
+    const datasetType = req.params.dataset; // "base" or "extended"
+    const currentCrop = req.query.crop as string | undefined;
+    const villages = loadVillageList();
+    const village = villages.find(v => v.village_id === villageId);
+    
+    if (!village) {
+      return res.status(404).json({ error: `Village ${villageId} not found` });
+    }
+
+    const villageState: VillageState = {
+      population: village.population || 0,
+      households: village.households || 0,
+      groundwater_index: village.groundwater_level_initial 
+        ? Math.max(0, 1 - (Math.max(0, village.groundwater_level_initial - 5) / 30))
+        : 0.5,
+      water_risk: village.groundwater_level_initial && village.groundwater_level_initial < 10 
+        ? "High" 
+        : village.groundwater_level_initial && village.groundwater_level_initial < 20 
+        ? "Medium" 
+        : "Low",
+      flood_prone: false,
+      main_crops: village.main_crop ? [village.main_crop] : [],
+      income_level_approx: "Low",
+      existing_infra: []
+    };
+
+    try {
+      const lookupId = datasetType === "base" ? `${villageId}_BASE` : villageId;
+      const recommendations = recommendSchemesForVillage(lookupId, villageState, currentCrop);
+      
+      if (recommendations.length === 0) {
+        return res.status(404).json({ 
+          error: `No ${datasetType} dataset found for village ${villageId}`
+        });
+      }
+
+      res.json({
+        villageId,
+        villageName: village.village_name,
+        dataset: datasetType,
+        datasetName: datasetType === "base" ? "User-Provided Dataset" : "Extended Dataset",
+        villageState,
+        recommendations,
+        totalSchemes: recommendations.length,
+        generatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error(`Error getting schemes for ${villageId}:`, error);
+      res.status(500).json({ error: "Failed to compute recommendations" });
+    }
   });
 
   // Vite middleware for development

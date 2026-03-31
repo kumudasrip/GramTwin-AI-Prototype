@@ -1,0 +1,126 @@
+{
+  "NARSING_BATLA_BASE": [
+    {
+      "name": "MGNREGA",
+      "category": "employment",
+      "status": "active",
+      "source": "user_dataset"
+    },
+    {
+      "name": "PMAY-G",
+      "category": "housing",
+      "status": "surveyed",
+      "source": "user_dataset"
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "category": "water",
+      "status": "implemented",
+      "source": "user_dataset"
+    }
+  ],
+  "NARSING_BATLA": [
+    {
+      "name": "MGNREGA",
+      "category": "employment",
+      "status": "active",
+      "source": "extended_dataset"
+    },
+    {
+      "name": "PMAY-G",
+      "category": "housing",
+      "status": "surveyed",
+      "source": "extended_dataset"
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "category": "water",
+      "status": "implemented",
+      "source": "extended_dataset"
+    },
+    {
+      "name": "ICDS",
+      "category": "health",
+      "status": "active",
+      "source": "extended_dataset"
+    }
+  ],
+  "DAMERACHERLA": [
+    {
+      "name": "MGNREGA",
+      "category": "employment",
+      "status": "active"
+    },
+    {
+      "name": "Pradhan Mantri Krishi Sinchayee Yojana",
+      "category": "agriculture",
+      "status": "implemented"
+    },
+    {
+      "name": "PMAY-G",
+      "category": "housing",
+      "status": "pending"
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "category": "water",
+      "status": "surveyed"
+    }
+  ],
+  "V001": [
+    {
+      "name": "MGNREGA",
+      "category": "employment",
+      "status": "active"
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "category": "water",
+      "status": "implemented"
+    },
+    {
+      "name": "PMAY-G",
+      "category": "housing",
+      "status": "active"
+    }
+  ],
+  "V002": [
+    {
+      "name": "MGNREGA",
+      "category": "employment",
+      "status": "active"
+    },
+    {
+      "name": "Pradhan Mantri Krishi Sinchayee Yojana",
+      "category": "agriculture",
+      "status": "surveyed"
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "category": "water",
+      "status": "pending"
+    }
+  ],
+  "V003": [
+    {
+      "name": "MGNREGA",
+      "category": "employment",
+      "status": "active"
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "category": "water",
+      "status": "implemented"
+    },
+    {
+      "name": "PMAY-G",
+      "category": "housing",
+      "status": "surveyed"
+    },
+    {
+      "name": "Pradhan Mantri Krishi Sinchayee Yojana",
+      "category": "agriculture",
+      "status": "active"
+    }
+  ]
+}

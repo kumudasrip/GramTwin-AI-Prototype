@@ -13,6 +13,8 @@ interface DashboardProps {
   onVillageSelect: (id: string) => void;
   selectedVillageId: string;
   rainfallInfo: { avg_rainfall_mm: number; rainfall_category: string } | null;
+  formData?: { population: number; rainfall_forecast: string; current_crop: string };
+  setFormData?: React.Dispatch<React.SetStateAction<{ population: number; rainfall_forecast: string; current_crop: string }>>;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ 
@@ -23,10 +25,12 @@ const Dashboard: React.FC<DashboardProps> = ({
   villages, 
   onVillageSelect,
   selectedVillageId,
-  rainfallInfo
+  rainfallInfo,
+  formData: parentFormData,
+  setFormData: setParentFormData
 }) => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
+  const [localFormData, setLocalFormData] = useState({
     population: 4500,
     rainfall_forecast: 'Below normal',
     current_crop: 'Paddy'
@@ -34,20 +38,24 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   useEffect(() => {
     if (baseline) {
-      setFormData(prev => ({
-        ...prev,
+      const updated = {
         population: baseline.population,
+        rainfall_forecast: localFormData.rainfall_forecast,
         current_crop: baseline.main_crop
-      }));
+      };
+      setLocalFormData(updated);
+      if (setParentFormData) setParentFormData(updated);
     }
   }, [baseline]);
 
   useEffect(() => {
     if (rainfallInfo) {
-      setFormData(prev => ({
-        ...prev,
+      const updated = {
+        ...localFormData,
         rainfall_forecast: rainfallInfo.rainfall_category
-      }));
+      };
+      setLocalFormData(updated);
+      if (setParentFormData) setParentFormData(updated);
     }
   }, [rainfallInfo]);
 
@@ -59,13 +67,14 @@ const Dashboard: React.FC<DashboardProps> = ({
     return { label: t('dashboard.critical'), color: "text-red-600", bg: "bg-red-50", border: "border-red-200" };
   };
 
-  const gwStatus = getGroundwaterStatus(formData.population);
+  const gwStatus = getGroundwaterStatus(localFormData.population);
 
   if (!baseline) return <div className="p-8 text-center">{t('dashboard.loadingVillageProfile')}</div>;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSimulate({ ...formData, village_id: selectedVillageId });
+    if (setParentFormData) setParentFormData(localFormData);
+    onSimulate({ ...localFormData, village_id: selectedVillageId });
   };
 
   return (
@@ -122,8 +131,8 @@ const Dashboard: React.FC<DashboardProps> = ({
               <div>
                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.population')}</p>
                 <div className="flex items-center gap-2">
-                  <p className="text-3xl font-bold text-earth-primary">{formData.population.toLocaleString()}</p>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${formData.population > 5000 ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                  <p className="text-3xl font-bold text-earth-primary">{localFormData.population.toLocaleString()}</p>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${localFormData.population > 5000 ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700'}`}>
                     {t('dashboard.live')}
                   </span>
                 </div>
@@ -135,7 +144,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </div>
               <div>
                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.mainCrop')}</p>
-                <p className="text-3xl font-bold text-earth-primary">{formData.current_crop}</p>
+                <p className="text-3xl font-bold text-earth-primary">{localFormData.current_crop}</p>
               </div>
             </div>
             <div className="dashboard-card !mb-0 flex items-center gap-5">
@@ -182,8 +191,12 @@ const Dashboard: React.FC<DashboardProps> = ({
           <div className="space-y-3">
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.rainfallForecast')}</label>
             <select
-              value={formData.rainfall_forecast}
-              onChange={(e) => setFormData({ ...formData, rainfall_forecast: e.target.value })}
+              value={localFormData.rainfall_forecast}
+              onChange={(e) => {
+                const updated = {...localFormData, rainfall_forecast: e.target.value};
+                setLocalFormData(updated);
+                if (setParentFormData) setParentFormData(updated);
+              }}
               className="select-input !py-4"
             >
               <option value="Below normal">{t('dashboard.below_normal')}</option>
@@ -195,16 +208,24 @@ const Dashboard: React.FC<DashboardProps> = ({
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.population')}</label>
             <input
               type="number"
-              value={formData.population}
-              onChange={(e) => setFormData({ ...formData, population: parseInt(e.target.value) || 0 })}
+              value={localFormData.population}
+              onChange={(e) => {
+                const updated = {...localFormData, population: parseInt(e.target.value) || 0};
+                setLocalFormData(updated);
+                if (setParentFormData) setParentFormData(updated);
+              }}
               className="select-input !py-4"
             />
           </div>
           <div className="space-y-3">
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.mainCrop')}</label>
             <select
-              value={formData.current_crop}
-              onChange={(e) => setFormData({ ...formData, current_crop: e.target.value })}
+              value={localFormData.current_crop}
+              onChange={(e) => {
+                const updated = {...localFormData, current_crop: e.target.value};
+                setLocalFormData(updated);
+                if (setParentFormData) setParentFormData(updated);
+              }}
               className="select-input !py-4"
             >
               <option value="Paddy">Paddy</option>
