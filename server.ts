@@ -2,7 +2,9 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
-import { simulateVillage, getBaselineData, getLatestAlerts, getLastSimulation } from "./server/simulation.ts";
+import { getBaselineData, getLatestAlerts, getLastSimulation } from "./server/simulation.ts";
+import { recommendBestAction } from "./server/bestActionAdvisor.ts";
+import { agency } from "./server/agents/agency.ts";
 import { loadVillageList, loadRainfallData } from "./server/data/csv_loader.ts";
 import { loadGeoJSON } from "./server/geo_loader.ts";
 import { 
@@ -83,9 +85,24 @@ async function startServer() {
     res.json(getBaselineData());
   });
 
-  app.post("/api/village/simulate", (req, res) => {
-    const result = simulateVillage(req.body);
-    res.json(result);
+  app.post("/api/village/simulate", async (req, res) => {
+    try {
+      const result = await agency.run(req.body);
+      res.json(result);
+    } catch (error) {
+      console.error("Simulation pipeline failed:", error);
+      res.status(500).json({ error: "Simulation failed" });
+    }
+  });
+
+  app.post("/api/village/simulate/best-action", async (req, res) => {
+    try {
+      const result = await recommendBestAction(req.body);
+      res.json(result);
+    } catch (error) {
+      console.error("Best action recommendation failed:", error);
+      res.status(500).json({ error: "Best action recommendation failed" });
+    }
   });
 
   app.get("/api/village/last_simulation", (req, res) => {

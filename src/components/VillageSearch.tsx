@@ -53,9 +53,9 @@ export default function VillageSearch({ onVillageSelect, selectedVillageId }: Vi
   };
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full">
       <div className="relative flex items-center">
-        <SearchIcon className="absolute left-3 w-4 h-4 text-zinc-400" />
+        <SearchIcon className="absolute left-3 w-5 h-5 text-zinc-400" />
         <input
           ref={inputRef}
           type="text"
@@ -70,7 +70,7 @@ export default function VillageSearch({ onVillageSelect, selectedVillageId }: Vi
             onClick={handleClear}
             className="absolute right-3 text-zinc-400 hover:text-zinc-600"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         )}
       </div>

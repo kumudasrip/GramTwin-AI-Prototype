@@ -1,65 +1,158 @@
-# GramTwin AI: Village-Scale Digital Twin Prototype
+# GramTwin AI
 
-GramTwin AI is a digital twin prototype designed for rural India to simulate village-scale water dynamics and provide actionable agricultural insights.
+GramTwin AI is a village-scale digital twin prototype for rural planning. It combines village data, water simulation, crop guidance, government-scheme recommendations, and map-based inspection in one app.
+
+## What Changed
+
+### Backend performance
+- Added in-memory caching in server/cache.ts
+- Cached CSV and GeoJSON loads so repeated requests do not reread files
+- Cached identical simulation inputs in server/simulation.ts
+- Ran best-action scenario simulations in parallel with Promise.all
+
+### Backend cleanup
+- Centralized shared risk logic in server/services/risk.ts
+- Centralized advisor/action-plan logic in server/services/advisorRecommendations.ts
+- Kept agents thin and orchestration-focused
+
+### Auth and startup flow
+- App now starts on the login page instead of restoring the previous session
+- AuthContext no longer rehydrates from localStorage on load
+
+### UI updates already in the app
+- Login, dashboard, map, reports, citizen queries, post query, infrastructure, farmer planning, and schemes screens were tightened for smaller screens
+- App layout now avoids horizontal overflow more aggressively
+- Several icon and spacing adjustments were made across the frontend for readability
+
+### Documentation cleanup
+- The extra root markdown docs were consolidated into this README
+- The old standalone markdown files were removed to keep the repo focused on one source of truth
+
+## Run the Project
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000.
+
+## Core Tech Stack
+- Frontend: React, TypeScript, Vite, Leaflet
+- Backend: Express, TypeScript, tsx
+- Data: CSV and GeoJSON under data/
+
+## Main Features
+
+### Village exploration
+- Search and select villages
+- View baseline village metadata
+- Inspect geo layers for villages, fields, wells, and flood-prone zones
+
+### Simulation engine
+- Simulates short-term water stock changes
+- Uses rainfall, population, and crop inputs
+- Returns crop recommendations and water-risk timelines
+
+### Best-action advisor
+- Compares intervention scenarios
+- Evaluates crop switching, irrigation reduction, and rainfall improvement
+- Picks the strongest outcome by risk and water stock
+
+### Government schemes
+- Recommends schemes from village state and crop context
+- Supports water, employment, housing, agriculture, and health categories
+
+### Multilingual support
+- Supports English, Hindi, Tamil, Marathi, and Gujarati in the main app language system
+- Translation data lives in src/i18n/
+
+### Login flow
+- The app uses the new dual-mode login flow
+- Citizen access is read-only
+- Organization access has full feature access
 
 ## Architecture
-- **Frontend**: React (TypeScript) + Leaflet for interactive map visualization.
-- **Backend**: Node.js/Express (TypeScript) with a simulation engine driven by CSV and GeoJSON data.
-- **Data Layer**:
-  - `data/villages.csv`: Census-style village demographics.
-  - `data/rainfall_*.csv`: Historical monthly rainfall aggregations (IMD-style).
-  - `data/geo/*.json`: GeoJSON layers for village boundaries, fields, wells, and flood-risk zones.
 
-## Key Features
-1. **Interactive Map**: Visualize village boundaries, crop fields, well health, and flood-risk zones.
-2. **Scenario Simulation**: Adjust population, crop types, and rainfall forecasts to project water stock over 3 months.
-3. **Smart Recommendations**: Get crop-switching advice and water-saving alerts based on simulation outcomes.
-4. **Data-Driven Insights**: Driven by local CSV data, ensuring transparency and reproducibility.
+- server.ts wires the API and frontend dev server
+- server/ contains simulation, data loading, geo loading, and agent orchestration
+- server/services/ contains shared logic used by multiple backend entry points
+- src/ contains the React frontend
+- data/ contains village CSV files and GeoJSON assets
 
-## How to Run
-1. The project is configured for a full-stack environment.
-2. The backend runs on port 3000 (standard for this environment).
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open the application in your browser.
+## API Endpoints
 
-## Demo Script
-1. **Explore the Map**: Select a village (e.g., Holalkere) from the directory or by clicking on the map.
-2. **Analyze Baseline**: View the village's population, main crop, and historical rainfall trend.
-3. **Run Simulation**: Go to the Dashboard, adjust the scenario (e.g., set Rainfall to "Below normal"), and click **Run Simulation**.
-4. **Review Results**: 
-   - Check the **Water Risk Timeline** for projected shortages.
-   - See **Crop Recommendations** for climate-resilient alternatives.
-   - Check the **Alerts** tab for urgent community notifications.
-5. **Map Feedback**: Notice how the map boundary highlights in red if the simulation projects a "High" risk.
+- GET /api/village/list
+- GET /api/village/:id/baseline
+- GET /api/rainfall/:id
+- POST /api/village/simulate
+- POST /api/village/simulate/best-action
+- GET /api/village/last_simulation
+- GET /api/village/alerts
+- GET /api/geo/villages
+- GET /api/geo/village/:id/fields
+- GET /api/geo/village/:id/wells
+- GET /api/geo/village/:id/flood_risk
 
-## Simulation Logic
-The simulation uses a water-stock model:
-- **Initial Stock**: 100 units (clamped between 0 and 100).
-- **Deductions**: 
-  - **Domestic**: `population * domestic_water_per_capita_per_month` (from config).
-  - **Irrigation**: Crop-specific values (e.g., Paddy: 15, Millets: 5) from config.
-- **Recharge**: Based on rainfall forecasts (Below normal, Normal, Above normal) from config.
-- **Risk Assessment**:
-  - **Low**: Stock >= 70
-  - **Medium**: 40 <= Stock < 70
-  - **High**: Stock < 40
+## Simulation Model
 
-## Configuration & Scenarios
-- **Scenario Config**: Edit `/server/config/default_scenario.json` to change global simulation parameters like water consumption rates or recharge factors.
-- **Village Data**: Mock data for multiple villages (Anantapur, Baramati, Chittoor) is available in `/server/data/mock_india_data.ts`.
-- **Recommendation Engine**: The app dynamically generates alerts based on the final month's risk level, suggesting crop shifts or irrigation reductions.
+- Initial water stock starts at 100
+- Domestic demand is population multiplied by the configured monthly factor
+- Irrigation demand is crop-specific
+- Recharge depends on rainfall category
+- Risk bands are Low, Medium, and High based on resulting stock
 
-## Example Input
-- **Population**: 4500
-- **Rainfall Forecast**: "Below normal"
-- **Main Crop**: "Paddy"
+## Login Flow
 
-## Project Structure
-- `/server.ts`: Main Express server entry point.
-- `/server/`: Backend simulation logic and types.
-- `/src/App.tsx`: Main React application.
-- `/src/components/`: Reusable UI components (Dashboard, Alerts).
-- `/src/api/`: Frontend API client.
+The login system is a dual-mode entry point:
+- Citizen mode gives read-only access to the app
+- Organization mode unlocks editing and reporting features
+
+The app now opens on login first, which matches the current auth behavior in the context provider.
+
+## Multilingual System
+
+The app includes a lightweight translation setup without external i18n libraries.
+
+Supported languages:
+- English
+- Hindi
+- Tamil
+- Marathi
+- Gujarati
+
+The language switcher and translation hook are already wired into the frontend app.
+
+## Government Schemes Logic
+
+The scheme recommender uses village state to estimate fit and priority.
+
+Categories covered:
+- Water and infrastructure
+- Employment and livelihood
+- Housing
+- Health
+- Agriculture
+
+## Example Integration
+
+The repository also includes an example app integration file at example-app-integration.tsx that shows how the login and role-based flow are wired together.
+
+## Removed Docs
+
+These files were consolidated into this README and removed from the root:
+- changes-summary.md
+- implementation-summary.md
+- login-documentation.md
+- multilingual-guide.md
+- new-login-integration.md
+- new-login-readme.md
+- schemes-api-examples.md
+- translation-quick-reference.md
+- usage-examples.md
+
+## Notes
+
+- The dev server is started with npm run dev
+- The app listens on http://localhost:3000
+- If the port is already in use, an older dev server process is still running

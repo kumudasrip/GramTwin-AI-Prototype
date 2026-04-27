@@ -12,7 +12,7 @@ export const LanguageSwitcher: React.FC = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <Globe className="w-4 h-4 text-zinc-500" />
+      <Globe className="w-5 h-5 text-zinc-500" />
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value as any)}

@@ -59,8 +59,8 @@ const Alerts: React.FC<AlertsProps> = ({ alerts }) => {
 
   return (
     <div className="dashboard-card h-full">
-      <div className="flex items-center gap-4 mb-8">
-        <AlertTriangle className="w-10 h-10 text-earth-accent" />
+      <div className="flex items-center gap-2 mb-8">
+        <AlertTriangle className="w-5 h-5 text-earth-accent" />
         <div>
           <h2 className="text-3xl font-extrabold tracking-tight text-earth-primary">{t('alerts.title')}</h2>
           <p className="text-xs text-zinc-500 mt-1">{alerts.length} {t('alerts.alertCount')}{alerts.length !== 1 ? 's' : ''}</p>
@@ -80,7 +80,7 @@ const Alerts: React.FC<AlertsProps> = ({ alerts }) => {
                 className={`p-6 rounded-2xl border transition-all duration-300 ${styles.bg} ${styles.border} ${styles.hover}`}
               >
                 <div className="flex gap-4">
-                  <IconComponent className={`w-6 h-6 mt-0.5 shrink-0 ${styles.iconColor}`} />
+                  <IconComponent className={`w-5 h-5 mt-0.5 shrink-0 ${styles.iconColor}`} />
                   <div className="flex-1">
                     <p className="text-zinc-700 font-medium leading-relaxed">{alert}</p>
                   </div>
@@ -100,3 +100,4 @@ const Alerts: React.FC<AlertsProps> = ({ alerts }) => {
 };
 
 export default Alerts;
+

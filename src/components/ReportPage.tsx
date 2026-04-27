@@ -120,23 +120,23 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 md:space-y-8 pb-12">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center border border-blue-200">
-          <FileText className="w-6 h-6 text-blue-600" />
+      <div className="flex items-center gap-2 md:gap-4 mb-6 md:mb-8">
+        <div className="w-5 h-5 bg-blue-100 rounded-xl flex items-center justify-center border border-blue-200">
+          <FileText className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-earth-primary">{t('reports.title')}</h1>
-          <p className="text-zinc-500">{t('reports.submit')} {baseline?.village_name || selectedVillageId}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-earth-primary">{t('reports.title')}</h1>
+          <p className="text-sm md:text-base text-zinc-500">{t('reports.submit')} {baseline?.village_name || selectedVillageId}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Main Form */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 w-full">
           <motion.div 
-            className="dashboard-card"
+            className="dashboard-card w-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
@@ -260,7 +260,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
                       }`}
                     >
                       <span className="flex items-center gap-2">
-                        <span className={`w-4 h-4 border-2 rounded flex items-center justify-center transition-all ${
+                        <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
                           formData.currentChallenges.includes(challenge)
                             ? 'bg-earth-primary border-earth-primary'
                             : 'border-zinc-300'
@@ -313,7 +313,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3"
+              className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2"
             >
               <CheckCircle className="w-5 h-5 text-green-600" />
               <p className="text-sm font-medium text-green-700">{t('reports.submissionSuccess')}</p>
@@ -322,10 +322,10 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
         </div>
 
         {/* Latest Report Sidebar */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 w-full">
           {latestReport ? (
             <motion.div 
-              className="dashboard-card sticky top-8"
+              className="dashboard-card lg:sticky lg:top-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
@@ -388,7 +388,7 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
             </motion.div>
           ) : (
             <div className="dashboard-card sticky top-8 text-center py-8">
-              <FileText className="w-12 h-12 text-zinc-300 mx-auto mb-3" />
+              <FileText className="w-5 h-5 text-zinc-300 mx-auto mb-3" />
               <p className="text-sm text-zinc-500">No reports submitted yet</p>
               <p className="text-xs text-zinc-400 mt-2">Submit your first report to get started</p>
             </div>
@@ -398,3 +398,4 @@ export default function ReportPage({ selectedVillageId, baseline }: ReportPagePr
     </div>
   );
 }
+

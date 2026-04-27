@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { getCacheData, setCacheData } from '../cache.ts';
 
 export interface VillageCSV {
   village_id: string;
@@ -22,12 +23,16 @@ export interface RainfallCSV {
 const DATA_DIR = path.join(process.cwd(), 'data');
 
 export function loadVillageList(): VillageCSV[] {
+  const cacheKey = 'villages_list';
+  const cached = getCacheData<VillageCSV[]>(cacheKey);
+  if (cached) return cached;
+
   const filePath = path.join(DATA_DIR, 'villages.csv');
   const content = fs.readFileSync(filePath, 'utf-8');
   const lines = content.trim().split('\n');
   const headers = lines[0].split(',');
 
-  return lines.slice(1).map(line => {
+  const result = lines.slice(1).map(line => {
     const values = line.split(',');
     const obj: any = {};
     headers.forEach((header, index) => {
@@ -40,9 +45,16 @@ export function loadVillageList(): VillageCSV[] {
     });
     return obj as VillageCSV;
   });
+
+  setCacheData(cacheKey, result);
+  return result;
 }
 
 export function loadRainfallData(villageId: string): { avg_rainfall_mm: number; rainfall_category: string } {
+  const cacheKey = `rainfall_${villageId}`;
+  const cached = getCacheData<{ avg_rainfall_mm: number; rainfall_category: string }>(cacheKey);
+  if (cached) return cached;
+
   const filePath = path.join(DATA_DIR, `rainfall_${villageId}.csv`);
   if (!fs.existsSync(filePath)) {
     return { avg_rainfall_mm: 0, rainfall_category: 'Normal' };
@@ -64,8 +76,11 @@ export function loadRainfallData(villageId: string): { avg_rainfall_mm: number; 
   if (avg < 50) category = 'Below normal'; // Adjusted thresholds for monthly avg
   else if (avg >= 150) category = 'Above normal';
 
-  return {
+  const result = {
     avg_rainfall_mm: Number(avg.toFixed(1)),
     rainfall_category: category
   };
+
+  setCacheData(cacheKey, result);
+  return result;
 }

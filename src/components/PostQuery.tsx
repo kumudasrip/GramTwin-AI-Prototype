@@ -114,19 +114,19 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-bold text-earth-primary mb-2">
+        <h1 className="text-2xl md:text-4xl font-bold text-earth-primary mb-2">
           {t('postQuery.title')}
         </h1>
-        <p className="text-gray-600">{t('postQuery.description')}</p>
+        <p className="text-sm md:text-base text-gray-600">{t('postQuery.description')}</p>
       </motion.div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Query Form */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="col-span-2 bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
+          className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-3 md:p-4 border border-gray-100 w-full"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             {t('postQuery.askQuestion')}
@@ -179,7 +179,7 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-3"
+                className="p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-2"
               >
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
                 <p className="text-sm text-red-700">{error}</p>
@@ -191,7 +191,7 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded flex items-center gap-3"
+                className="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded flex items-center gap-2"
               >
                 <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                 <p className="text-sm text-emerald-700">{t('postQuery.querySubmitted')}</p>
@@ -224,7 +224,7 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-earth-primary/10 to-emerald-100/10 rounded-2xl p-6 border border-earth-primary/20 h-fit"
+          className="bg-gradient-to-br from-earth-primary/10 to-emerald-100/10 rounded-2xl p-3 md:p-4 border border-earth-primary/20 h-fit w-full"
         >
           <h3 className="text-lg font-bold text-earth-primary mb-4">
             {t('postQuery.responseTime')}
@@ -258,7 +258,7 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
+          className="bg-white rounded-2xl shadow-lg p-3 md:p-4 border border-gray-100 w-full"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             {t('postQuery.yourQueries')} ({submittedQueries.length})
@@ -274,7 +274,7 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-2 mb-2">
                       <span className="px-3 py-1 bg-earth-primary/10 text-earth-primary text-xs font-semibold rounded-full">
                         {categories.find(c => c.value === query.category)?.label || query.category}
                       </span>
@@ -298,3 +298,4 @@ export default function PostQuery({ selectedVillageId }: PostQueryProps) {
     </div>
   );
 }
+

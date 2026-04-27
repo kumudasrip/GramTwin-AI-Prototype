@@ -97,7 +97,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
         'subtitle': 'గ్రామ డిజిటల్ ట్విన్ ప్లాట్‌ఫారమ్',
         'selectMode': 'మీ యాక్సెస్ స్థాయి ఎంచుకోండి',
         'continueCitizen': 'నాగరికుడిగా కొనసాగండి',
-        'citizenDesc': 'మ్యాప్, మట్టి & పంటలు, ఆధారభూత సంरचన చూడండి',
+        'citizenDesc': 'మ్యాప్, మట్టి & పంటలు, ఆధారభూత సంరచన చూడండి',
         'loginOrg': 'సంస్థగా లాగిన్ చేయండి',
         'orgDesc': 'డేటా సవరణ & నివేదనలతో పూర్ణ యాక్సెస్',
         'email': 'ఇమెయిల్',
@@ -119,13 +119,13 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
         'otpInvalid': 'OTP 6 అంకెలు ఉండాలి',
         'loginSuccess': 'లాగిన్ విజయవంతమైంది! దిశ మార్పు చేస్తున్నాము...',
         'security': 'సంరక్షణ గమనిక',
-        'securityMsg': 'ఈ ప్లాట్‌ఫారమ్ గ్రామ డేటాను ధృవీకృత కోడ్‌లతో రక్షిస్తుంది. అননిర్దేశిత ప్రవేశం నిషేధించబడింది.',
+        'securityMsg': 'ఈ ప్లాట్‌ఫారమ్ గ్రామ డేటాను ధృవీకృత కోడ్‌లతో రక్షిస్తుంది. అననిర్దేశిత ప్రవేశం నిషేధించబడింది.',
         'permissions': 'అనుమతులు',
         'citizenCan': 'నాగరికుడు చేయగలరు',
         'orgCan': 'సంస్థ చేయగలదు',
         'viewMap': 'ఇంటరాక్టివ్ మ్యాప్ చూడండి',
         'soilCrops': 'మట్టి & పంటల డేటా చూడండి',
-        'infrastructure': 'ఆధారభూత సంरचన చూడండి',
+        'infrastructure': 'ఆధారభూత సంరచన చూడండి',
         'multilingual': 'బహుభాషిక ఎంపికలు యాక్సెస్ చేయండి',
         'dashboard': 'డ్యాష్‌బోర్డ్ యాక్సెస్ చేయండి',
         'editData': 'గ్రామ డేటా సవరించండి',
@@ -251,7 +251,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
             <button
               key={lang.code}
               onClick={() => setLanguage(lang.code as 'en' | 'te')}
-              className={`px-3 py-1.5 rounded text-sm font-medium transition-all flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-all flex items-center gap-2 ${
                 language === lang.code
                   ? 'bg-emerald-500 text-white shadow-md'
                   : 'text-gray-600 hover:bg-gray-100'
@@ -381,7 +381,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
                 {/* Organization Type */}
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                    <Building2 className="w-4 h-4" />
+                    <Building2 className="w-5 h-5" />
                     {t('orgType')}
                   </label>
                   <select
@@ -398,7 +398,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
                 {/* Place Name */}
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
+                    <MapPin className="w-5 h-5" />
                     {t('placeName')}
                   </label>
                   <input
@@ -415,7 +415,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-3"
+                    className="p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-2"
                   >
                     <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
                     <p className="text-sm text-red-700">{error}</p>
@@ -464,7 +464,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
               className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100"
             >
               <div className="text-center mb-6">
-                <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+                <CheckCircle className="w-5 h-5 text-emerald-500 mx-auto mb-3" />
                 <p className="text-emerald-700 font-semibold">{t('otpSent')}</p>
                 <p className="text-gray-600 text-sm mt-1">{formData.email}</p>
               </div>
@@ -499,7 +499,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-3"
+                    className="p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-2"
                   >
                     <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
                     <p className="text-sm text-red-700">{error}</p>
@@ -511,7 +511,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded flex items-center gap-3"
+                    className="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded flex items-center gap-2"
                   >
                     <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                     <p className="text-sm text-emerald-700">{t('loginSuccess')}</p>
@@ -573,7 +573,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
             {/* Citizen Permissions */}
             <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-emerald-200">
               <h4 className="font-semibold text-emerald-700 mb-3 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircle className="w-5 h-5" />
                 {t('citizenCan')}
               </h4>
               <ul className="space-y-2 text-sm text-gray-600">
@@ -595,7 +595,7 @@ export default function LoginPage({ onCitizenLogin, onOrgLogin }: LoginPageProps
             {/* Organization Permissions */}
             <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-blue-200">
               <h4 className="font-semibold text-blue-700 mb-3 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircle className="w-5 h-5" />
                 {t('orgCan')}
               </h4>
               <ul className="space-y-2 text-sm text-gray-600">

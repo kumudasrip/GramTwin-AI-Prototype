@@ -41,7 +41,7 @@ const TerrainInfoLegend: React.FC = () => {
         {Object.entries(SOIL_TYPES).map(([name, info]) => (
           <div key={name} className="flex items-start gap-3">
             <div
-              className="w-6 h-6 rounded flex-shrink-0 border border-gray-300"
+              className="w-5 h-5 rounded flex-shrink-0 border border-gray-300"
               style={{ backgroundColor: info.color }}
             />
             <div className="text-sm">
@@ -103,7 +103,7 @@ const SoilInfoPopup: React.FC<{ soilData: SoilData }> = ({ soilData }) => {
       </div>
 
       <div className="mt-2 bg-yellow-50 border border-yellow-200 rounded p-2 text-xs text-yellow-800">
-        <p className="font-semibold flex items-center gap-1">
+        <p className="font-semibold flex items-center gap-2">
           <AlertCircle size={14} />
           {soilInfo.description}
         </p>
@@ -298,7 +298,7 @@ const TerrainMap: React.FC<TerrainMapProps> = ({ selectedVillageId }) => {
     <div className="w-full h-screen flex flex-col bg-gray-50">
       {/* Top Controls */}
       <div className="bg-white shadow-sm p-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <MapPin size={24} className="text-blue-600" />
           <h2 className="text-2xl font-bold text-gray-800">
             Terrain & Soil Map - {selectedVillageId}
@@ -404,3 +404,4 @@ const TerrainMap: React.FC<TerrainMapProps> = ({ selectedVillageId }) => {
 };
 
 export default TerrainMap;
+

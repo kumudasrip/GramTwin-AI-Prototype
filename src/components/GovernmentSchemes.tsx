@@ -100,9 +100,9 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
   const renderSchemeCard = (scheme: Scheme, index: number) => (
     <div
       key={index}
-      className={`border-l-4 p-4 rounded-lg mb-3 ${getPriorityColor(scheme.priority)}`}
+      className={`border-l-4 p-3 md:p-4 rounded-lg mb-3 w-full ${getPriorityColor(scheme.priority)}`}
     >
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xl">{getCategoryIcon(scheme.category)}</span>
@@ -117,7 +117,7 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
             <span className="font-semibold">Priority: {scheme.priority}</span>
           </div>
         </div>
-        <div className="ml-4 text-right">
+        <div className="sm:ml-4 text-left sm:text-right">
           <div className="text-2xl font-bold">{(scheme.eligibility_score * 100).toFixed(0)}%</div>
           <div className="text-xs opacity-75">Eligibility</div>
         </div>
@@ -156,9 +156,9 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
   const hasBothDatasets = schemes.datasets?.provided_dataset && schemes.datasets?.extended_dataset;
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8 w-full">
       {/* Village Information */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-xs text-blue-600 font-bold uppercase mb-1">Population</p>
           <p className="text-2xl font-bold text-blue-700">{schemes.villageState.population.toLocaleString()}</p>
@@ -183,10 +183,10 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
             <Filter className="w-5 h-5 text-earth-primary" />
             <h3 className="font-bold text-gray-700">View Datasets</h3>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
             <button
               onClick={() => setActiveDataset('both')}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition ${
+              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-semibold text-sm md:text-base transition ${
                 activeDataset === 'both'
                   ? 'bg-earth-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -196,7 +196,7 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
             </button>
             <button
               onClick={() => setActiveDataset('provided')}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition ${
+              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-semibold text-sm md:text-base transition ${
                 activeDataset === 'provided'
                   ? 'bg-earth-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -206,7 +206,7 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
             </button>
             <button
               onClick={() => setActiveDataset('extended')}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition ${
+              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-semibold text-sm md:text-base transition ${
                 activeDataset === 'extended'
                   ? 'bg-earth-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -224,7 +224,7 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
           {(activeDataset === 'both' || activeDataset === 'provided') && schemes.datasets?.provided_dataset && (
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Award className="w-6 h-6 text-orange-500" />
+                <Award className="w-5 h-5 text-orange-500" />
                 <h2 className="text-xl font-bold text-gray-800">
                   {schemes.datasets.provided_dataset.name}
                 </h2>
@@ -244,7 +244,7 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
           {(activeDataset === 'both' || activeDataset === 'extended') && schemes.datasets?.extended_dataset && (
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-6 h-6 text-blue-500" />
+                <TrendingUp className="w-5 h-5 text-blue-500" />
                 <h2 className="text-xl font-bold text-gray-800">
                   {schemes.datasets.extended_dataset.name}
                 </h2>
@@ -264,7 +264,7 @@ const GovernmentSchemes: React.FC<GovernmentSchemesProps> = ({ selectedVillageId
       ) : (
         <div className="bg-white border border-gray-200 rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Award className="w-6 h-6 text-earth-primary" />
+            <Award className="w-5 h-5 text-earth-primary" />
             <h2 className="text-xl font-bold text-gray-800">Government Schemes</h2>
             <span className="ml-auto text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
               {schemes.recommendations?.length || 0} schemes

@@ -129,6 +129,7 @@ function AppContent() {
   };
 
   const latestRisk = simulation?.timeline[simulation.timeline.length - 1]?.risk;
+  const pageContainerClass = 'h-full overflow-y-auto w-full max-w-7xl mx-auto px-4 pt-4 md:pt-6 custom-scrollbar';
 
   // Show new login page if not authenticated
   if (!isAuthenticated) {
@@ -141,140 +142,141 @@ function AppContent() {
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container overflow-x-hidden">
       {/* Header */}
-      <header className="navbar">
+      <header className="navbar max-w-7xl mx-auto w-full">
         <div className="logo-text">{t('nav.gramtwinAI')}</div>
         
         {/* Search Component */}
-        <div className="flex-1 max-w-md ml-8">
+        <div className="w-full md:w-auto md:flex-1 md:max-w-md">
           <VillageSearch 
             onVillageSelect={(id) => handleVillageSelect(id)}
             selectedVillageId={selectedVillageId}
           />
         </div>
         
-        <nav className="flex items-center gap-2 ml-auto">
+        <nav className="w-full lg:flex-1 flex items-center gap-2 flex-wrap overflow-x-auto">
           <button 
             onClick={() => setActiveTab('map')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
               activeTab === 'map' 
                 ? 'bg-earth-primary text-white shadow-lg' 
                 : 'text-zinc-500 hover:bg-zinc-100'
             }`}
           >
-            <MapIcon className="w-4 h-4" />
+            <MapIcon className="w-5 h-5" />
             {t('nav.map')}
           </button>
           <button 
             onClick={() => setActiveTab('dashboard')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
               activeTab === 'dashboard' 
                 ? 'bg-earth-primary text-white shadow-lg' 
                 : 'text-zinc-500 hover:bg-zinc-100'
             }`}
           >
-            <LayoutDashboard className="w-4 h-4" />
+            <LayoutDashboard className="w-5 h-5" />
             {t('nav.dashboard')}
           </button>
           <button 
             onClick={() => setActiveTab('village-map')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
               activeTab === 'village-map' 
                 ? 'bg-earth-primary text-white shadow-lg' 
                 : 'text-zinc-500 hover:bg-zinc-100'
             }`}
           >
-            <Sprout className="w-4 h-4" />
+            <Sprout className="w-5 h-5" />
             {t('nav.soilCrops')}
           </button>
           {user?.role === 'org' && (
             <button 
               onClick={() => setActiveTab('reports')}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
                 activeTab === 'reports' 
                   ? 'bg-earth-primary text-white shadow-lg' 
                   : 'text-zinc-500 hover:bg-zinc-100'
               }`}
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-5 h-5" />
               {t('nav.reports')}
             </button>
           )}
           {user?.role === 'org' && (
             <button 
               onClick={() => setActiveTab('citizen-queries')}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
                 activeTab === 'citizen-queries' 
                   ? 'bg-earth-primary text-white shadow-lg' 
                   : 'text-zinc-500 hover:bg-zinc-100'
               }`}
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-5 h-5" />
               {t('citizenQueries.title')}
             </button>
           )}
           {user?.role === 'citizen' && (
             <button 
               onClick={() => setActiveTab('post-query')}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
                 activeTab === 'post-query' 
                   ? 'bg-earth-primary text-white shadow-lg' 
                   : 'text-zinc-500 hover:bg-zinc-100'
               }`}
             >
-              <MessageSquare className="w-4 h-4" />
+              <MessageSquare className="w-5 h-5" />
               {t('postQuery.postQuery')}
             </button>
           )}
           <button 
             onClick={() => setActiveTab('infrastructure')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
               activeTab === 'infrastructure' 
                 ? 'bg-earth-primary text-white shadow-lg' 
                 : 'text-zinc-500 hover:bg-zinc-100'
             }`}
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-5 h-5" />
             {t('nav.infrastructure')}
           </button>
           <button 
             onClick={() => setActiveTab('farmer-planning')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
               activeTab === 'farmer-planning' 
                 ? 'bg-earth-primary text-white shadow-lg' 
                 : 'text-zinc-500 hover:bg-zinc-100'
             }`}
           >
-            <Users className="w-4 h-4" />
+            <Users className="w-5 h-5" />
             Farmer Planning
           </button>
           <button 
             onClick={() => setActiveTab('government-schemes')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm md:text-base whitespace-nowrap transition-all flex items-center gap-2 ${
               activeTab === 'government-schemes' 
                 ? 'bg-earth-primary text-white shadow-lg' 
                 : 'text-zinc-500 hover:bg-zinc-100'
             }`}
           >
-            <Award className="w-4 h-4" />
+            <Award className="w-5 h-5" />
             Schemes
           </button>
-          <div className="ml-4 pl-4 border-l border-zinc-200 flex items-center gap-3">
-            <LanguageSwitcher />
-            <button 
-              onClick={handleLogout}
-              className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-red-600"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
         </nav>
+
+        <div className="flex items-center gap-2 flex-wrap ml-auto">
+          <LanguageSwitcher />
+          <button 
+            onClick={handleLogout}
+            className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-red-600"
+            title="Logout"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -285,8 +287,8 @@ function AppContent() {
             className="h-full"
           >
             {activeTab === 'map' && (
-              <div className="main-layout h-full">
-                <div className="map-hero">
+              <div className="main-layout h-full w-full max-w-7xl mx-auto px-4 pt-4 md:pt-6">
+                <div className="map-hero w-full md:w-2/3">
                   <MapComponent 
                     selectedVillageId={selectedVillageId} 
                     onVillageSelect={handleVillageSelect}
@@ -294,10 +296,10 @@ function AppContent() {
                   />
                 </div>
                 
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 md:gap-6 w-full md:w-1/3">
                   <div className="village-card">
                     <div className="flex items-center gap-2 mb-4 text-zinc-400">
-                      <Search className="w-4 h-4" />
+                      <Search className="w-5 h-5" />
                       <h3 className="text-xs font-bold uppercase tracking-widest">{t('map.selectVillage')}</h3>
                     </div>
                     <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -308,7 +310,7 @@ function AppContent() {
                           className={`w-full text-left p-4 rounded-xl border transition-all flex items-center justify-between group ${selectedVillageId === v.id ? 'border-earth-primary bg-earth-primary/5 text-earth-primary' : 'border-zinc-100 hover:border-zinc-200 text-zinc-500'}`}
                         >
                           <span className="font-semibold">{v.name}</span>
-                          <ChevronRight className={`w-4 h-4 transition-transform ${selectedVillageId === v.id ? 'translate-x-1' : 'opacity-0 group-hover:opacity-100'}`} />
+                          <ChevronRight className={`w-5 h-5 transition-transform ${selectedVillageId === v.id ? 'translate-x-1' : 'opacity-0 group-hover:opacity-100'}`} />
                         </button>
                       ))}
                     </div>
@@ -333,7 +335,11 @@ function AppContent() {
                         </div>
                         <div className="flex justify-between items-center text-sm">
                           <span className="text-zinc-400">{t('map.waterLevel')}</span>
-                          <span className="font-bold text-earth-primary">{baseline.groundwater_level}m</span>
+                          <span className="font-bold text-earth-primary">
+                            {typeof baseline.groundwater_level === 'number'
+                              ? `${baseline.groundwater_level}m`
+                              : baseline.groundwater_level}
+                          </span>
                         </div>
                       </div>
 
@@ -352,7 +358,7 @@ function AppContent() {
             )}
 
             {activeTab === 'village-map' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <EnhancedVillageMap 
                   selectedVillageId={selectedVillageId}
                   onVillageSelect={handleVillageSelect}
@@ -361,7 +367,7 @@ function AppContent() {
             )}
 
             {activeTab === 'dashboard' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <Dashboard 
                   baseline={baseline} 
                   simulation={simulation} 
@@ -378,7 +384,7 @@ function AppContent() {
             )}
 
             {activeTab === 'reports' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <ReportPage 
                   selectedVillageId={selectedVillageId}
                   baseline={baseline}
@@ -387,7 +393,7 @@ function AppContent() {
             )}
 
             {activeTab === 'citizen-queries' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <CitizenQueries
                   selectedVillageId={selectedVillageId}
                 />
@@ -395,7 +401,7 @@ function AppContent() {
             )}
 
             {activeTab === 'post-query' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <PostQuery 
                   selectedVillageId={selectedVillageId}
                 />
@@ -403,7 +409,7 @@ function AppContent() {
             )}
 
             {activeTab === 'infrastructure' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <InfrastructureRecommendations 
                   selectedVillageId={selectedVillageId}
                   baseline={baseline}
@@ -412,7 +418,7 @@ function AppContent() {
             )}
 
             {activeTab === 'farmer-planning' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <FarmerCropPlanning 
                   villageId={selectedVillageId}
                 />
@@ -420,7 +426,7 @@ function AppContent() {
             )}
 
             {activeTab === 'government-schemes' && (
-              <div className="h-full overflow-y-auto px-8 pt-8 pr-10 custom-scrollbar">
+              <div className={pageContainerClass}>
                 <GovernmentSchemes 
                   selectedVillageId={selectedVillageId}
                   currentCrop={formData.current_crop}
@@ -433,9 +439,9 @@ function AppContent() {
       </main>
 
       {/* Footer */}
-      <footer className="px-8 py-6 border-t border-zinc-200 mt-auto flex justify-between items-center bg-white/50 backdrop-blur-sm">
+      <footer className="w-full max-w-7xl mx-auto px-4 py-6 border-t border-zinc-200 mt-auto flex flex-wrap justify-between items-center gap-2 bg-white/50 backdrop-blur-sm">
         <p className="text-xs text-zinc-500 font-medium">{t('footer.copyright')}</p>
-        <div className="flex items-center gap-6 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+        <div className="flex flex-wrap items-center gap-2 md:gap-6 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
           <span>{t('footer.waterSecurity')}</span>
           <span className="w-1 h-1 bg-zinc-300 rounded-full" />
           <span>{t('footer.climateAdaptation')}</span>
@@ -448,3 +454,4 @@ function AppContent() {
 }
 
 export default AppContent;
+

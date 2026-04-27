@@ -1,8 +1,15 @@
 import { InputData, SimulationResult, BaselineData, MonthRisk, CropRecommendation } from "./types.ts";
 import defaultScenario from "./config/default_scenario.json" assert { type: "json" };
 import { loadRainfallData } from "./data/csv_loader.ts";
+import { getSimulationCache, setSimulationCache } from "./cache.ts";
 
 let lastSimulation: SimulationResult | null = null;
+
+export interface SimulationOptions {
+  irrigationMultiplier?: number;
+  rechargeMultiplier?: number;
+  rainfallOverride?: NonNullable<InputData["rainfall_forecast"]>;
+}
 
 export function getBaselineData(): BaselineData {
   return {
@@ -80,9 +87,14 @@ function generateRecommendations(
   return { crop_recs, alerts };
 }
 
-export function simulateVillage(input: InputData): SimulationResult {
+export function runSimulationScenario(input: InputData, options: SimulationOptions = {}): SimulationResult {
+  // Check cache first
+  const cacheKey = { ...input, options };
+  const cached = getSimulationCache(cacheKey);
+  if (cached) return cached;
+
   const { population, current_crop, village_id } = input;
-  let { rainfall_forecast } = input;
+  let rainfall_forecast = options.rainfallOverride ?? input.rainfall_forecast;
   
   let rainfall_info;
   if (!rainfall_forecast && village_id) {
@@ -98,11 +110,13 @@ export function simulateVillage(input: InputData): SimulationResult {
   const domestic_factor = defaultScenario.domestic_water_per_capita_per_month;
   const irrigation_map = defaultScenario.irrigation_water_by_crop as Record<string, number>;
   const recharge_map = defaultScenario.recharge_by_rainfall as Record<string, number>;
+  const irrigationMultiplier = options.irrigationMultiplier ?? 1;
+  const rechargeMultiplier = options.rechargeMultiplier ?? 1;
 
   for (let i = 1; i <= defaultScenario.months_to_simulate; i++) {
     const domestic_demand = population * domestic_factor;
-    const irrigation_demand = irrigation_map[current_crop] || 10;
-    const recharge = recharge_map[rainfall_forecast || "Normal"] || 10;
+    const irrigation_demand = (irrigation_map[current_crop] || 10) * irrigationMultiplier;
+    const recharge = (recharge_map[rainfall_forecast || "Normal"] || 10) * rechargeMultiplier;
 
     water_stock = water_stock - domestic_demand - irrigation_demand + recharge;
     
@@ -132,6 +146,14 @@ export function simulateVillage(input: InputData): SimulationResult {
     rainfall_info
   };
 
+  // Cache the result
+  setSimulationCache(cacheKey, result);
+  
+  return result;
+}
+
+export function simulateVillage(input: InputData): SimulationResult {
+  const result = runSimulationScenario(input);
   lastSimulation = result;
   return result;
 }

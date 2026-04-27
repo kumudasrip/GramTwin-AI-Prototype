@@ -14,9 +14,25 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
   const [farmerCrops, setFarmerCrops] = useState<FarmerCrop[]>([]);
   const [cropStats, setCropStats] = useState<Record<string, number>>({});
   const [warnings, setWarnings] = useState<string[]>([]);
+  const [farmerNameInput, setFarmerNameInput] = useState('');
+  const [registerError, setRegisterError] = useState('');
+  const [editingFarmerId, setEditingFarmerId] = useState<string | null>(null);
+  const [editFarmerName, setEditFarmerName] = useState('');
+  const [editCrop, setEditCrop] = useState('');
+  const [editError, setEditError] = useState('');
 
   const crops = ['Paddy', 'Millets', 'Pulses', 'Wheat', 'Cotton'];
   const waterIntensiveCrops = ['Paddy', 'Sugarcane', 'Cotton'];
+  const [selectedCropInput, setSelectedCropInput] = useState(crops[0]);
+
+  const normalizeName = (name: string) => name.trim().toLowerCase();
+
+  const isDuplicateName = (name: string, excludeFarmerId?: string): boolean => {
+    const normalized = normalizeName(name);
+    return farmerCrops.some(
+      (farmer) => farmer.farmerId !== excludeFarmerId && normalizeName(farmer.farmerName) === normalized
+    );
+  };
 
   // Load farmer crop choices from localStorage
   useEffect(() => {
@@ -84,6 +100,79 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
     localStorage.setItem(storageKey, JSON.stringify(updated));
     setFarmerCrops(updated);
     calculateStats(updated);
+    if (editingFarmerId === farmerId) {
+      setEditingFarmerId(null);
+      setEditFarmerName('');
+      setEditCrop('');
+      setEditError('');
+    }
+  };
+
+  const handleRegisterFarmer = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegisterError('');
+    const cleanedName = farmerNameInput.trim();
+    if (!cleanedName) return;
+
+    if (isDuplicateName(cleanedName)) {
+      setRegisterError('This farmer name is already registered for this village.');
+      return;
+    }
+
+    const newFarmer: FarmerCrop = {
+      farmerId: `farmer_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      farmerName: cleanedName,
+      selectedCrop: selectedCropInput,
+      timestamp: Date.now(),
+    };
+
+    const updated = [newFarmer, ...farmerCrops];
+    const storageKey = `farmerCrops_${villageId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setFarmerCrops(updated);
+    calculateStats(updated);
+    setFarmerNameInput('');
+    setSelectedCropInput(crops[0]);
+  };
+
+  const startEditingFarmer = (farmer: FarmerCrop) => {
+    setEditingFarmerId(farmer.farmerId);
+    setEditFarmerName(farmer.farmerName);
+    setEditCrop(farmer.selectedCrop);
+    setEditError('');
+  };
+
+  const cancelEditingFarmer = () => {
+    setEditingFarmerId(null);
+    setEditFarmerName('');
+    setEditCrop('');
+    setEditError('');
+  };
+
+  const saveEditedFarmer = () => {
+    if (!editingFarmerId) return;
+    const cleanedName = editFarmerName.trim();
+    if (!cleanedName) {
+      setEditError('Farmer name is required.');
+      return;
+    }
+
+    if (isDuplicateName(cleanedName, editingFarmerId)) {
+      setEditError('Another farmer with this name already exists.');
+      return;
+    }
+
+    const updated = farmerCrops.map((farmer) =>
+      farmer.farmerId === editingFarmerId
+        ? { ...farmer, farmerName: cleanedName, selectedCrop: editCrop || farmer.selectedCrop }
+        : farmer
+    );
+
+    const storageKey = `farmerCrops_${villageId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setFarmerCrops(updated);
+    calculateStats(updated);
+    cancelEditingFarmer();
   };
 
   const getCropWarning = (crop: string): string | null => {
@@ -172,8 +261,8 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center border border-green-200">
+      <div className="flex items-center gap-2 mb-6">
+        <div className="w-5 h-5 bg-green-100 rounded-lg flex items-center justify-center border border-green-200">
           <Users className="w-5 h-5 text-green-600" />
         </div>
         <div>
@@ -181,6 +270,48 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
           <p className="text-sm text-zinc-500">Coordinate crop choices to avoid market saturation and water scarcity</p>
         </div>
       </div>
+
+        <div className="dashboard-card">
+          <h3 className="text-lg font-semibold text-earth-primary mb-4">Register Farmer Crop</h3>
+          <form onSubmit={handleRegisterFarmer} className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="md:col-span-2">
+              <label className="text-xs font-semibold text-zinc-600 block mb-1">Farmer Name</label>
+              <input
+                type="text"
+                value={farmerNameInput}
+                onChange={(e) => setFarmerNameInput(e.target.value)}
+                placeholder="Enter farmer name"
+                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-primary/30"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-zinc-600 block mb-1">Crop</label>
+              <select
+                value={selectedCropInput}
+                onChange={(e) => setSelectedCropInput(e.target.value)}
+                className="w-full px-3 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-primary/30"
+              >
+                {crops.map((crop) => (
+                  <option key={crop} value={crop}>
+                    {crop}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end">
+              <button
+                type="submit"
+                disabled={!farmerNameInput.trim()}
+                className="w-full px-4 py-2 bg-earth-primary text-white rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Register
+              </button>
+            </div>
+          </form>
+          {registerError && (
+            <p className="text-xs text-red-600 mt-3 font-semibold">{registerError}</p>
+          )}
+        </div>
 
       {/* Alerts Section */}
       {warnings.length > 0 && (
@@ -199,9 +330,9 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Pie Chart - Crop Distribution */}
           <div className="dashboard-card bg-gradient-to-br from-slate-50 via-cyan-50 to-emerald-50 backdrop-blur-sm">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-gradient-to-br from-cyan-100 to-emerald-100 rounded-lg flex items-center justify-center">
-                <Zap className="w-4 h-4 text-emerald-600" />
+                <Zap className="w-5 h-5 text-emerald-600" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Crop Distribution</h3>
             </div>
@@ -295,9 +426,9 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
               <div className="w-full mt-8 space-y-3 bg-white bg-opacity-60 rounded-xl p-4">
                 {generatePieChartData().map((item) => (
                   <div key={item.crop} className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 transition-colors">
-                    <div className="flex items-center gap-3 flex-1">
+                    <div className="flex items-center gap-2 flex-1">
                       <div
-                        className="w-4 h-4 rounded-full shadow-sm flex-shrink-0"
+                        className="w-5 h-5 rounded-full shadow-sm flex-shrink-0"
                         style={{ backgroundColor: getColorByRisk(item.percentage) }}
                       />
                       <span className="text-sm font-semibold text-slate-700">{item.crop}</span>
@@ -314,9 +445,9 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
 
           {/* Risk Distribution Chart */}
           <div className="dashboard-card bg-gradient-to-br from-slate-50 via-orange-50 to-rose-50 backdrop-blur-sm">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-gradient-to-br from-orange-100 to-rose-100 rounded-lg flex items-center justify-center">
-                <AlertCircle className="w-4 h-4 text-rose-600" />
+                <AlertCircle className="w-5 h-5 text-rose-600" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Risk Analysis</h3>
             </div>
@@ -366,7 +497,7 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
                           }} />
                           <span className="font-semibold text-slate-800">{risk.label}</span>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <div className="text-right">
                             <div className="text-sm font-bold text-slate-900">{risk.count}</div>
                             <div className="text-xs text-slate-500">{Math.round(risk.percentage)}%</div>
@@ -465,7 +596,7 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
                       </div>
                       <p className="text-xs text-zinc-600">{count} farmers</p>
                       {warning && (
-                        <p className="text-xs text-red-600 font-semibold mt-1 flex items-center gap-1">
+                        <p className="text-xs text-red-600 font-semibold mt-1 flex items-center gap-2">
                           <AlertTriangle className="w-3 h-3" /> {warning}
                         </p>
                       )}
@@ -495,28 +626,81 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
               <tbody>
                 {farmerCrops.map((fc) => {
                   const warning = getCropWarning(fc.selectedCrop);
+                  const isEditing = editingFarmerId === fc.farmerId;
                   return (
                     <tr key={fc.farmerId} className="border-b border-zinc-100 hover:bg-zinc-50">
-                      <td className="px-4 py-3 font-medium text-zinc-900">{fc.farmerName}</td>
-                      <td className="px-4 py-3 text-zinc-700">{fc.selectedCrop}</td>
+                      <td className="px-4 py-3 font-medium text-zinc-900">
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            value={editFarmerName}
+                            onChange={(e) => setEditFarmerName(e.target.value)}
+                            className="w-full px-2 py-1 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-earth-primary/30"
+                          />
+                        ) : (
+                          fc.farmerName
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-zinc-700">
+                        {isEditing ? (
+                          <select
+                            value={editCrop}
+                            onChange={(e) => setEditCrop(e.target.value)}
+                            className="w-full px-2 py-1 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-earth-primary/30"
+                          >
+                            {crops.map((crop) => (
+                              <option key={crop} value={crop}>
+                                {crop}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          fc.selectedCrop
+                        )}
+                      </td>
                       <td className="px-4 py-3">
                         {warning ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
+                          <span className="inline-flex items-center gap-2 px-2 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
                             <AlertTriangle className="w-3 h-3" /> {warning}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded">
+                          <span className="inline-flex items-center gap-2 px-2 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded">
                             Low Risk
                           </span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() => handleRemoveFarmer(fc.farmerId)}
-                          className="text-red-600 hover:text-red-700 font-semibold text-xs underline"
-                        >
-                          Remove
-                        </button>
+                        {isEditing ? (
+                          <div className="flex items-center justify-center gap-3">
+                            <button
+                              onClick={saveEditedFarmer}
+                              className="text-emerald-600 hover:text-emerald-700 font-semibold text-xs underline"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={cancelEditingFarmer}
+                              className="text-zinc-600 hover:text-zinc-700 font-semibold text-xs underline"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-3">
+                            <button
+                              onClick={() => startEditingFarmer(fc)}
+                              className="text-blue-600 hover:text-blue-700 font-semibold text-xs underline"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleRemoveFarmer(fc.farmerId)}
+                              className="text-red-600 hover:text-red-700 font-semibold text-xs underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   );
@@ -524,6 +708,9 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
               </tbody>
             </table>
           </div>
+          {editError && (
+            <p className="text-xs text-red-600 mt-3 font-semibold">{editError}</p>
+          )}
         </div>
       )}
     </div>
@@ -531,3 +718,4 @@ const FarmerCropPlanning: React.FC<{ villageId: string }> = ({ villageId }) => {
 };
 
 export default FarmerCropPlanning;
+

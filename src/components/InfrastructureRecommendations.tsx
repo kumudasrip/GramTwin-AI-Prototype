@@ -85,19 +85,19 @@ export default function InfrastructureRecommendations({
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 md:space-y-8 pb-12 w-full">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center border border-purple-200">
-          <Settings className="w-6 h-6 text-purple-600" />
+      <div className="flex items-center gap-2 md:gap-4 mb-6 md:mb-8">
+        <div className="w-5 h-5 bg-purple-100 rounded-xl flex items-center justify-center border border-purple-200">
+          <Settings className="w-5 h-5 text-purple-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-earth-primary">{t('infrastructure.title')}</h1>
-          <p className="text-zinc-500">{t('infrastructure.developmentPriorities')} {baseline?.village_name || selectedVillageId}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-earth-primary">{t('infrastructure.title')}</h1>
+          <p className="text-sm md:text-base text-zinc-500">{t('infrastructure.developmentPriorities')} {baseline?.village_name || selectedVillageId}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Photo Upload Section */}
         <div className="lg:col-span-1">
           <motion.div 
@@ -191,7 +191,7 @@ export default function InfrastructureRecommendations({
                     transition={{ duration: 0.3, delay: idx * 0.05 }}
                   >
                     <div className="flex gap-4">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-earth-primary flex-shrink-0 ${colors.badge}`}>
+                      <div className={`w-5 h-5 rounded-lg flex items-center justify-center text-earth-primary flex-shrink-0 ${colors.badge}`}>
                         {TYPE_ICONS[rec.type] || <Settings className="w-5 h-5" />}
                       </div>
 
@@ -240,7 +240,7 @@ export default function InfrastructureRecommendations({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <Settings className="w-16 h-16 text-zinc-300 mx-auto mb-4" />
+              <Settings className="w-5 h-5 text-zinc-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-zinc-700 mb-2">{t('infrastructure.noRecommendations')}</h3>
               <p className="text-sm text-zinc-500 mb-4">
                 {t('infrastructure.uploadForRecommendations')}
@@ -255,3 +255,4 @@ export default function InfrastructureRecommendations({
     </div>
   );
 }
+

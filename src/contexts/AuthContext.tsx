@@ -20,16 +20,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User>(() => {
-    // Restore user from localStorage on mount
-    const stored = localStorage.getItem('gramtwin_user');
-    return stored ? JSON.parse(stored) : { role: null };
-  });
+  const [user, setUser] = useState<User>({ role: null });
 
   useEffect(() => {
-    // Save user to localStorage whenever it changes
-    localStorage.setItem('gramtwin_user', JSON.stringify(user));
-  }, [user]);
+    // Always start with no authentication on app load
+    // Users must login each time for this prototype
+    localStorage.removeItem('gramtwin_user');
+    localStorage.removeItem('gramtwin_role');
+  }, []);
 
   const login = (email: string, orgType: string, placeName: string, role: 'org' = 'org') => {
     const newUser: User = { email, orgType, placeName, role };

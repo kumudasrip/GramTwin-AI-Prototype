@@ -83,7 +83,7 @@ export default function Login({ onLogin, loading = false }: LoginProps) {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-earth-primary to-earth-secondary rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-5 h-5 bg-gradient-to-br from-earth-primary to-earth-secondary rounded-2xl flex items-center justify-center shadow-lg">
               <div className="text-3xl">🌾</div>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function Login({ onLogin, loading = false }: LoginProps) {
             {/* Organization Type */}
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-zinc-700 flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-earth-primary" />
+                <Building2 className="w-5 h-5 text-earth-primary" />
                 {t('login.organizationType')}
               </label>
               <select
@@ -126,7 +126,7 @@ export default function Login({ onLogin, loading = false }: LoginProps) {
             {/* Place Name */}
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-zinc-700 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-earth-primary" />
+                <MapPin className="w-5 h-5 text-earth-primary" />
                 {t('login.placeName')}
               </label>
               <input
@@ -142,7 +142,7 @@ export default function Login({ onLogin, loading = false }: LoginProps) {
             {/* Verification Code */}
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-zinc-700 flex items-center gap-2">
-                <Key className="w-4 h-4 text-earth-primary" />
+                <Key className="w-5 h-5 text-earth-primary" />
                 {t('login.verificationCode')}
               </label>
               <input

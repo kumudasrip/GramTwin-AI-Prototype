@@ -78,15 +78,15 @@ const Dashboard: React.FC<DashboardProps> = ({
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 md:space-y-8 pb-12">
       {/* Village Selection & About */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
+        <div className="w-full lg:w-2/3 space-y-6">
           <div className="dashboard-card">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <MapPin className="w-6 h-6 text-earth-primary" />
-                <h2 className="text-2xl font-bold text-earth-primary">{t('dashboard.selectVillage')}</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+              <div className="flex items-center gap-2 min-w-0">
+                <MapPin className="w-5 h-5 text-earth-primary" />
+                <h2 className="text-xl md:text-2xl font-bold text-earth-primary">{t('dashboard.selectVillage')}</h2>
               </div>
               {baseline.village_name && (
                 <div className="text-right">
@@ -106,7 +106,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             </select>
             
             {baseline.district && (
-              <div className="mt-6 flex gap-4 text-xs text-zinc-500 font-semibold uppercase tracking-wider">
+              <div className="mt-6 flex flex-wrap gap-2 md:gap-4 text-xs text-zinc-500 font-semibold uppercase tracking-wider">
                 <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">{t('dashboard.district')}: {baseline.district}</span>
                 <span className="px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">{t('dashboard.state')}: {baseline.state}</span>
               </div>
@@ -123,39 +123,39 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           {/* Village Profile Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="dashboard-card !mb-0 flex items-center gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 md:gap-6">
+            <div className="dashboard-card !mb-0 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
               <div className="w-14 h-14 bg-earth-primary/10 rounded-2xl flex items-center justify-center text-earth-primary border border-earth-primary/10">
-                <Users className="w-7 h-7" />
+                <Users className="w-5 h-5" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.population')}</p>
-                <div className="flex items-center gap-2">
-                  <p className="text-3xl font-bold text-earth-primary">{localFormData.population.toLocaleString()}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-2xl xl:text-3xl font-bold text-earth-primary leading-none break-words">{localFormData.population.toLocaleString()}</p>
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${localFormData.population > 5000 ? 'bg-orange-100 text-orange-700' : 'bg-emerald-100 text-emerald-700'}`}>
                     {t('dashboard.live')}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="dashboard-card !mb-0 flex items-center gap-5">
+            <div className="dashboard-card !mb-0 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
               <div className="w-14 h-14 bg-earth-secondary/10 rounded-2xl flex items-center justify-center text-earth-secondary border border-earth-secondary/10">
-                <Sprout className="w-7 h-7" />
+                <Sprout className="w-5 h-5" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.mainCrop')}</p>
-                <p className="text-3xl font-bold text-earth-primary">{localFormData.current_crop}</p>
+                <p className="text-2xl xl:text-3xl font-bold text-earth-primary break-words leading-none">{localFormData.current_crop}</p>
               </div>
             </div>
-            <div className="dashboard-card !mb-0 flex items-center gap-5">
+            <div className="dashboard-card !mb-0 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
               <div className={`w-14 h-14 ${gwStatus.bg} rounded-2xl flex items-center justify-center ${gwStatus.color} border ${gwStatus.border}`}>
-                <Droplets className="w-7 h-7" />
+                <Droplets className="w-5 h-5" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.groundwater')}</p>
-                <div className="flex items-center gap-1">
-                  <p className={`text-2xl font-bold ${gwStatus.color}`}>{gwStatus.label}</p>
-                  <span className={gwStatus.color}>✓</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className={`text-xl xl:text-2xl font-bold ${gwStatus.color} leading-none break-words`}>{gwStatus.label}</p>
+                  <span className={`${gwStatus.color} leading-none`}>✓</span>
                 </div>
               </div>
             </div>
@@ -163,12 +163,12 @@ const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* About Section */}
-        <div className="flex flex-col gap-6">
+        <div className="w-full lg:w-1/3 flex flex-col gap-4 md:gap-6">
           <div className="dashboard-card bg-white border-earth-primary/10 shadow-xl flex flex-col justify-center min-h-[280px] relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-earth-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
             <div className="relative z-10">
-              <h2 className="text-3xl font-extrabold mb-6 leading-tight text-earth-primary">GramTwin AI <br/><span className="text-earth-gold">{t('dashboard.intelligence')}</span></h2>
-              <p className="text-zinc-600 leading-relaxed text-lg">
+              <h2 className="text-2xl md:text-3xl font-extrabold mb-6 leading-tight text-earth-primary">GramTwin AI <br/><span className="text-earth-gold">{t('dashboard.intelligence')}</span></h2>
+              <p className="text-sm md:text-base text-zinc-600 leading-relaxed">
                 {t('dashboard.description')}
               </p>
             </div>
@@ -178,17 +178,17 @@ const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Simulation Form */}
       <div className="dashboard-card">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-6 md:mb-8">
           <h3 className="card-title !mb-0 !border-none">{t('dashboard.simulationScenarios')}</h3>
           {rainfallInfo && (
-            <div className="text-right">
+            <div className="text-left md:text-right">
               <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.historicalRainfall')}</p>
-              <p className="text-lg font-bold text-earth-gold">{rainfallInfo.avg_rainfall_mm} mm → {rainfallInfo.rainfall_category}</p>
+              <p className="text-sm md:text-lg font-bold text-earth-gold">{rainfallInfo.avg_rainfall_mm} mm → {rainfallInfo.rainfall_category}</p>
             </div>
           )}
         </div>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
-          <div className="space-y-3">
+        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row md:flex-wrap gap-4 md:gap-8 md:items-end">
+          <div className="space-y-3 w-full md:flex-1">
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.rainfallForecast')}</label>
             <select
               value={localFormData.rainfall_forecast}
@@ -204,7 +204,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               <option value="Above normal">{t('dashboard.above_normal')}</option>
             </select>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3 w-full md:flex-1">
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.population')}</label>
             <input
               type="number"
@@ -217,7 +217,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               className="select-input !py-4"
             />
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3 w-full md:flex-1">
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('dashboard.mainCrop')}</label>
             <select
               value={localFormData.current_crop}
@@ -233,14 +233,14 @@ const Dashboard: React.FC<DashboardProps> = ({
               <option value="Pulses">Pulses</option>
             </select>
           </div>
-          <div className="md:col-span-3 flex justify-center mt-8">
+          <div className="w-full flex justify-center mt-4 md:mt-8">
             <button
               type="submit"
               disabled={loading}
-              className="primary-btn max-w-md"
+              className="primary-btn w-full md:w-auto"
             >
               <div className="flex items-center justify-center gap-3">
-                <Play className={`w-6 h-6 ${loading ? 'animate-pulse' : ''}`} />
+                <Play className={`w-5 h-5 ${loading ? 'animate-pulse' : ''}`} />
                 {loading ? t('dashboard.processingSimulation') : t('dashboard.executeSimulation')}
               </div>
             </button>
@@ -250,13 +250,13 @@ const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Results Tables */}
       {simulation && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
           {/* Water Risk Timeline */}
           <div className="dashboard-card !p-0 overflow-hidden">
-            <div className="px-8 pt-8">
+            <div className="px-3 md:px-4 pt-3 md:pt-4">
               <h3 className="card-title">{t('dashboard.waterRiskTimeline')}</h3>
             </div>
-            <div className="px-8 pb-8">
+            <div className="px-3 md:px-4 pb-3 md:pb-4 overflow-x-auto">
               <table className="data-table">
                 <thead>
                   <tr>
@@ -270,7 +270,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                     <tr key={idx}>
                       <td className="font-bold text-lg">{item.month}</td>
                       <td>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
                           <div className="flex-1 h-3 bg-zinc-100 rounded-full overflow-hidden border border-zinc-200">
                             <div 
                               className={`h-full rounded-full transition-all duration-1000 ${
@@ -302,10 +302,10 @@ const Dashboard: React.FC<DashboardProps> = ({
 
           {/* Crop Recommendations */}
           <div className="dashboard-card !p-0 overflow-hidden">
-            <div className="px-8 pt-8">
+            <div className="px-3 md:px-4 pt-3 md:pt-4">
               <h3 className="card-title">{t('dashboard.cropRecommendations')}</h3>
             </div>
-            <div className="px-8 pb-8">
+            <div className="px-3 md:px-4 pb-3 md:pb-4 overflow-x-auto">
               <table className="data-table">
                 <thead>
                   <tr>
@@ -344,3 +344,4 @@ const Dashboard: React.FC<DashboardProps> = ({
 };
 
 export default Dashboard;
+

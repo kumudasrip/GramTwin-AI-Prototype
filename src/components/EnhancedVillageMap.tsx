@@ -531,41 +531,41 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
             <h4 className="legend-title">{t('mapComponent.legend')}</h4>
             <div className="space-y-2 text-xs">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded border border-[#1e3a8a] bg-[#1e3a8a]/20" />
+                <div className="w-5 h-5 rounded border border-[#1e3a8a] bg-[#1e3a8a]/20" />
                 <span>{t('mapComponent.villageBoundary')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-[#1e3a8a]/60 border border-white" />
+                <div className="w-5 h-5 rounded bg-[#1e3a8a]/60 border border-white" />
                 <span>{t('mapComponent.paddyFields')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-[#d97706]/60 border border-white" />
+                <div className="w-5 h-5 rounded bg-[#d97706]/60 border border-white" />
                 <span>{t('mapComponent.milletFields')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-[#047857] border border-white" />
+                <div className="w-5 h-5 rounded-full bg-[#047857] border border-white" />
                 <span>{t('mapComponent.healthyWell')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-[#dc2626] border border-white" />
+                <div className="w-5 h-5 rounded-full bg-[#dc2626] border border-white" />
                 <span>{t('mapComponent.stressedWell')}</span>
               </div>
               <hr className="my-2" />
               <p className="font-semibold text-gray-700 mb-1">Soil Types (Click for details):</p>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-[#2C2C2C] border border-white" />
+                <div className="w-5 h-5 rounded-full bg-[#2C2C2C] border border-white" />
                 <span>Black Soil</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-[#CD5C5C] border border-white" />
+                <div className="w-5 h-5 rounded-full bg-[#CD5C5C] border border-white" />
                 <span>Red Soil</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-[#F4A460] border border-white" />
+                <div className="w-5 h-5 rounded-full bg-[#F4A460] border border-white" />
                 <span>Alluvial Soil</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-[#DAA520] border border-white" />
+                <div className="w-5 h-5 rounded-full bg-[#DAA520] border border-white" />
                 <span>Sandy Soil</span>
               </div>
             </div>
@@ -579,7 +579,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
               type="checkbox"
               checked={showCropsLayer}
               onChange={(e) => setShowCropsLayer(e.target.checked)}
-              className="w-4 h-4"
+              className="w-5 h-5"
             />
             <span className="text-sm font-medium text-zinc-700">{t('enhancedVillageMap.fields')}</span>
           </label>
@@ -588,7 +588,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
               type="checkbox"
               checked={showSoilLayer}
               onChange={(e) => setShowSoilLayer(e.target.checked)}
-              className="w-4 h-4"
+              className="w-5 h-5"
             />
             <span className="text-sm font-medium text-zinc-700">{t('enhancedVillageMap.wells')}</span>
           </label>
@@ -604,7 +604,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-zinc-100">
+          <div className="flex items-center gap-2 mb-4 pb-4 border-b border-zinc-100">
             <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
               <MapIcon className="w-5 h-5 text-amber-700" />
             </div>
@@ -618,7 +618,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div 
-                        className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                        className="w-5 h-5 rounded-full border-2 border-white shadow-sm"
                         style={{ backgroundColor: SOIL_COLORS[soil.soilType] }}
                       />
                       <span className="text-sm font-medium text-zinc-700">{SOIL_NAMES[soil.soilType]}</span>
@@ -660,7 +660,7 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-zinc-100">
+          <div className="flex items-center gap-2 mb-4 pb-4 border-b border-zinc-100">
             <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
               <Leaf className="w-5 h-5 text-green-700" />
             </div>
@@ -713,3 +713,4 @@ export default function EnhancedVillageMap({ selectedVillageId, onVillageSelect 
     </div>
   );
 }
+
