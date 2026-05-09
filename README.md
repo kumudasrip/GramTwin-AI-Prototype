@@ -37,6 +37,14 @@ npm run dev
 
 Open http://localhost:3000.
 
+## Render Deployment
+
+For Render, set these environment variables:
+- `PORT` is provided by Render automatically and the server now binds to it.
+- `DATABASE_URL` should point to a PostgreSQL database if you want report submissions to persist.
+
+If `DATABASE_URL` is not set, the app falls back to in-memory storage for reports, which is fine for local development but not persistent across restarts.
+
 ## Core Tech Stack
 - Frontend: React, TypeScript, Vite, Leaflet
 - Backend: Express, TypeScript, tsx

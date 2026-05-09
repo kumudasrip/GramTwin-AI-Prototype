@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { MessageSquare, AlertCircle, Search, Filter } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
-import type { CitizenQuery } from './PostQuery';
+import { fetchCitizenQueries, updateCitizenQueryStatus, type CitizenQuery } from '../api/client';
 
 interface CitizenQueriesProps {
   selectedVillageId: string;
@@ -27,18 +27,20 @@ export default function CitizenQueries({ selectedVillageId }: CitizenQueriesProp
 
   // Load queries from localStorage
   useEffect(() => {
-    const savedQueries = localStorage.getItem('citizen_queries');
-    if (savedQueries) {
+    const loadQueries = async () => {
       try {
-        const queries = JSON.parse(savedQueries);
+        const queries = await fetchCitizenQueries(selectedVillageId);
         setAllQueries(queries);
         setFilteredQueries(queries);
       } catch (err) {
         console.error('Failed to load queries', err);
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
-  }, []);
+    };
+
+    loadQueries();
+  }, [selectedVillageId]);
 
   // Filter queries based on search and filters
   useEffect(() => {
@@ -68,12 +70,16 @@ export default function CitizenQueries({ selectedVillageId }: CitizenQueriesProp
     setFilteredQueries(filtered);
   }, [searchTerm, categoryFilter, statusFilter, allQueries, selectedVillageId]);
 
-  const handleUpdateStatus = (queryId: string, newStatus: 'submitted' | 'answered') => {
-    const updated = allQueries.map(q =>
-      q.id === queryId ? { ...q, status: newStatus } : q
-    );
-    setAllQueries(updated);
-    localStorage.setItem('citizen_queries', JSON.stringify(updated));
+  const handleUpdateStatus = async (queryId: string, newStatus: 'submitted' | 'answered') => {
+    try {
+      const updatedQuery = await updateCitizenQueryStatus(queryId, newStatus);
+      const updated = allQueries.map(q =>
+        q.id === queryId ? updatedQuery : q
+      );
+      setAllQueries(updated);
+    } catch (err) {
+      console.error('Failed to update query status', err);
+    }
   };
 
   if (loading) {

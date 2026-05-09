@@ -39,6 +39,16 @@ export interface VillageListItem {
   name: string;
 }
 
+export interface CitizenQuery {
+  id: string;
+  text: string;
+  category: string;
+  timestamp: string;
+  status: 'submitted' | 'answered';
+  villageId: string;
+  citizenId: string;
+}
+
 export const fetchVillageList = async (): Promise<VillageListItem[]> => {
   const res = await fetch("/api/village/list");
   return res.json();
@@ -107,6 +117,36 @@ export const fetchAlerts = async (): Promise<string[]> => {
 
 export const fetchVillageAlerts = async (villageId: string): Promise<string[]> => {
   const res = await fetch(`/api/village/${villageId}/alerts`);
+  return res.json();
+};
+
+export const fetchCitizenQueries = async (villageId: string): Promise<CitizenQuery[]> => {
+  const res = await fetch(`/api/village/${villageId}/queries`);
+  return res.json();
+};
+
+export const submitCitizenQuery = async (villageId: string, query: {
+  text: string;
+  category: string;
+  citizenId: string;
+}): Promise<CitizenQuery> => {
+  const res = await fetch(`/api/village/${villageId}/queries`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(query),
+  });
+  return res.json();
+};
+
+export const updateCitizenQueryStatus = async (
+  queryId: string,
+  status: 'submitted' | 'answered'
+): Promise<CitizenQuery> => {
+  const res = await fetch(`/api/village/queries/${queryId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  });
   return res.json();
 };
 

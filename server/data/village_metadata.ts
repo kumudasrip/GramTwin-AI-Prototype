@@ -1,4 +1,5 @@
 // Village metadata including soil types, suitable crops, and climate data
+import { ensureDatabaseSchema, hasDatabase, pool } from "../db.ts";
 
 export interface SoilType {
   id: string;
@@ -228,36 +229,124 @@ export const VILLAGE_METADATA: Record<string, VillageMetadata> = {
   }
 };
 
-// In-memory storage for reports (in production, use a database)
+// In-memory storage for reports when DATABASE_URL is not configured.
 let villageReports: VillageReport[] = [];
-let infrastructureRecommendations: InfrastructureRecommendation[] = [];
 
-export function addVillageReport(report: VillageReport): VillageReport {
-  villageReports.push(report);
-  return report;
+function mapReportRow(row: any): VillageReport {
+  const rawChallenges = row.current_challenges;
+
+  return {
+    id: row.id,
+    villageId: row.village_id,
+    reportDate: row.report_date,
+    submittedBy: row.submitted_by,
+    submitterType: row.submitter_type,
+    waterStatus: row.water_status,
+    waterDetails: row.water_details ?? "",
+    climateStatus: row.climate_status,
+    climateDetails: row.climate_details ?? "",
+    currentChallenges: Array.isArray(rawChallenges)
+      ? rawChallenges
+      : typeof rawChallenges === "string"
+        ? JSON.parse(rawChallenges)
+        : [],
+    notes: row.notes ?? ""
+  };
 }
 
-export function getVillageReports(villageId: string): VillageReport[] {
-  return villageReports.filter(r => r.villageId === villageId);
+export async function initializeVillageMetadataStore(): Promise<void> {
+  await ensureDatabaseSchema();
 }
 
-export function getLatestReport(villageId: string): VillageReport | undefined {
-  const reports = villageReports.filter(r => r.villageId === villageId);
-  return reports.length > 0 ? reports[reports.length - 1] : undefined;
+export async function addVillageReport(report: VillageReport): Promise<VillageReport> {
+  if (!hasDatabase || !pool) {
+    villageReports.push(report);
+    return report;
+  }
+
+  await ensureDatabaseSchema();
+  const result = await pool.query(
+    `
+      INSERT INTO village_reports (
+        id,
+        village_id,
+        report_date,
+        submitted_by,
+        submitter_type,
+        water_status,
+        water_details,
+        climate_status,
+        climate_details,
+        current_challenges,
+        notes
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb, $11)
+      RETURNING *
+    `,
+    [
+      report.id,
+      report.villageId,
+      report.reportDate,
+      report.submittedBy,
+      report.submitterType,
+      report.waterStatus,
+      report.waterDetails,
+      report.climateStatus,
+      report.climateDetails,
+      JSON.stringify(report.currentChallenges),
+      report.notes
+    ]
+  );
+
+  return mapReportRow(result.rows[0]);
 }
 
-export function addInfrastructureRecommendation(rec: InfrastructureRecommendation): InfrastructureRecommendation {
-  infrastructureRecommendations.push(rec);
-  return rec;
+export async function getVillageReports(villageId: string): Promise<VillageReport[]> {
+  if (!hasDatabase || !pool) {
+    return villageReports.filter(r => r.villageId === villageId);
+  }
+
+  await ensureDatabaseSchema();
+  const result = await pool.query(
+    `
+      SELECT *
+      FROM village_reports
+      WHERE village_id = $1
+      ORDER BY report_date ASC
+    `,
+    [villageId]
+  );
+
+  return result.rows.map(mapReportRow);
 }
 
-export function getInfrastructureRecommendations(villageId: string): InfrastructureRecommendation[] {
-  return infrastructureRecommendations.filter(r => r.villageId === villageId);
+export async function getLatestReport(villageId: string): Promise<VillageReport | undefined> {
+  if (!hasDatabase || !pool) {
+    const reports = villageReports.filter(r => r.villageId === villageId);
+    return reports.length > 0 ? reports[reports.length - 1] : undefined;
+  }
+
+  await ensureDatabaseSchema();
+  const result = await pool.query(
+    `
+      SELECT *
+      FROM village_reports
+      WHERE village_id = $1
+      ORDER BY report_date DESC
+      LIMIT 1
+    `,
+    [villageId]
+  );
+
+  return result.rows[0] ? mapReportRow(result.rows[0]) : undefined;
 }
 
-export function generateInfrastructureRecommendations(villageId: string): InfrastructureRecommendation[] {
+export async function getInfrastructureRecommendations(villageId: string): Promise<InfrastructureRecommendation[]> {
+  return generateInfrastructureRecommendations(villageId);
+}
+
+export async function generateInfrastructureRecommendations(villageId: string): Promise<InfrastructureRecommendation[]> {
   const metadata = VILLAGE_METADATA[villageId];
-  const latestReport = getLatestReport(villageId);
+  const latestReport = await getLatestReport(villageId);
 
   if (!metadata) return [];
 

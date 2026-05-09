@@ -7,13 +7,15 @@ import { recommendBestAction } from "./server/bestActionAdvisor.ts";
 import { agency } from "./server/agents/agency.ts";
 import { loadVillageList, loadRainfallData } from "./server/data/csv_loader.ts";
 import { loadGeoJSON } from "./server/geo_loader.ts";
+import { addCitizenQuery, getCitizenQueries, initializeCitizenQueryStore, updateCitizenQueryStatus } from "./server/data/citizen_queries.ts";
 import { 
   VILLAGE_METADATA, 
   addVillageReport, 
   getVillageReports, 
   getLatestReport,
   getInfrastructureRecommendations,
-  generateInfrastructureRecommendations
+  generateInfrastructureRecommendations,
+  initializeVillageMetadataStore
 } from "./server/data/village_metadata.ts";
 import { recommendSchemesForVillage, VillageState } from "./server/data/schemes_loader.ts";
 
@@ -22,9 +24,12 @@ const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT || 3000);
 
   app.use(express.json());
+
+  await initializeVillageMetadataStore();
+  await initializeCitizenQueryStore();
 
   // API Routes
   app.get("/api/village/list", (req, res) => {
@@ -197,14 +202,14 @@ async function startServer() {
   });
 
   // Get all reports for a village
-  app.get("/api/village/:id/reports", (req, res) => {
-    const reports = getVillageReports(req.params.id);
+  app.get("/api/village/:id/reports", async (req, res) => {
+    const reports = await getVillageReports(req.params.id);
     res.json(reports);
   });
 
   // Get latest report for a village
-  app.get("/api/village/:id/reports/latest", (req, res) => {
-    const report = getLatestReport(req.params.id);
+  app.get("/api/village/:id/reports/latest", async (req, res) => {
+    const report = await getLatestReport(req.params.id);
     if (report) {
       res.json(report);
     } else {
@@ -213,7 +218,7 @@ async function startServer() {
   });
 
   // Submit a new village report
-  app.post("/api/village/report/submit", (req, res) => {
+  app.post("/api/village/report/submit", async (req, res) => {
     const { villageId, submittedBy, submitterType, waterStatus, waterDetails, climateStatus, climateDetails, currentChallenges, notes } = req.body;
     
     if (!villageId || !submittedBy) {
@@ -234,24 +239,62 @@ async function startServer() {
       notes: notes || ''
     };
 
-    const added = addVillageReport(report);
+    const added = await addVillageReport(report);
     res.json(added);
   });
 
-  // Get infrastructure recommendations for a village
-  app.get("/api/village/:id/infrastructure/recommendations", (req, res) => {
-    const recommendations = getInfrastructureRecommendations(req.params.id);
-    if (recommendations.length === 0) {
-      // Generate recommendations if none exist
-      const generated = generateInfrastructureRecommendations(req.params.id);
-      res.json(generated);
-    } else {
-      res.json(recommendations);
+  // Get citizen queries for a village
+  app.get("/api/village/:id/queries", async (req, res) => {
+    const queries = await getCitizenQueries(req.params.id);
+    res.json(queries);
+  });
+
+  // Submit a citizen query
+  app.post("/api/village/:id/queries", async (req, res) => {
+    const { text, category, citizenId } = req.body;
+
+    if (!text || !category || !citizenId) {
+      return res.status(400).json({ error: "Missing required fields" });
     }
+
+    const query = {
+      id: `query_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      villageId: req.params.id,
+      text,
+      category,
+      timestamp: new Date().toISOString(),
+      status: "submitted" as const,
+      citizenId,
+    };
+
+    const added = await addCitizenQuery(query);
+    res.status(201).json(added);
+  });
+
+  // Update citizen query status from the government dashboard
+  app.patch("/api/village/queries/:queryId", async (req, res) => {
+    const { status } = req.body;
+
+    if (status !== "submitted" && status !== "answered") {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+
+    const updated = await updateCitizenQueryStatus(req.params.queryId, status);
+    if (!updated) {
+      return res.status(404).json({ error: "Query not found" });
+    }
+
+    res.json(updated);
+  });
+
+  // Get infrastructure recommendations for a village
+  app.get("/api/village/:id/infrastructure/recommendations", async (req, res) => {
+    const recommendations = await getInfrastructureRecommendations(req.params.id);
+    res.json(recommendations);
   });
 
   // Analyze dumpyard photo and generate recommendations 
-  app.post("/api/village/infrastructure/analyze-photo", (req, res) => {
+  app.post("/api/village/infrastructure/analyze-photo", async (req, res) => {
     const { villageId } = req.body;
     
     if (!villageId) {
@@ -259,7 +302,7 @@ async function startServer() {
     }
 
     // Mock photo analysis - in production, use computer vision API
-    const recommendations = generateInfrastructureRecommendations(villageId);
+    const recommendations = await generateInfrastructureRecommendations(villageId);
     res.json(recommendations);
   });
 
@@ -597,7 +640,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
   });
 }
 
